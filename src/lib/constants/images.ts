@@ -1,0 +1,10 @@
+export const cli_white = "/images/cli_white.svg";
+export const cli_blue = "/images/cli-blue.svg";
+export const learner_hero = "/images/homepage.jpg";
+export const SD = "/images/SD.svg";
+export const DSM = "/images/DSM.svg";
+export const CCE = "/images/CCE.svg"
+export const NextSteps = "/images/NextStep.svg";
+export const NextStepsMobile = "/images/NextStepMobile.svg";
+export const authentication = "/images/authentication.svg";
+export const secureLogin = "/images/secureLogin.svg";
