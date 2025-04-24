@@ -1,47 +1,80 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import { CourseGrid } from "@/components/Courses/course-grid"
 import { fetchTracks } from "@/lib/repositories/courses"
 import type { Track } from "@/lib/types/track"
-import { CiSearch } from "react-icons/ci"
-import { FiAlertCircle } from "react-icons/fi"
+import { FiAlertCircle, FiArrowRight } from "react-icons/fi"
 import Link from "next/link"
-import { BsArrowRight } from "react-icons/bs"
+import { SearchBar } from "@/components/Courses/search-bar"
 
-export default async function CoursesPage() {
-  let tracks: Track[] = []
-  let error = null
+export default function CoursesPage() {
+  const [tracks, setTracks] = useState<Track[]>([])
+  const [filteredTracks, setFilteredTracks] = useState<Track[]>([])
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
 
-  try {
-    // Fetch the tracks data
-    const response = await fetchTracks()
+  useEffect(() => {
+    async function loadTracks() {
+      try {
+        setIsLoading(true)
+        const response = await fetchTracks()
 
-    // Check if response exists and has the expected structure
-    if (!response || typeof response !== "object") {
-      throw new Error("Invalid API response")
+        if (!response || typeof response !== "object") {
+          throw new Error("Invalid API response")
+        }
+
+        let tracksData: Track[] = []
+        if (response.success && Array.isArray(response.tracks)) {
+          tracksData = response.tracks
+        } else if (response.tracks && Array.isArray(response.tracks)) {
+          tracksData = response.tracks
+        } else {
+          throw new Error("No tracks found in API response")
+        }
+
+        setTracks(tracksData)
+        setFilteredTracks(tracksData)
+        console.log(`Successfully processed ${tracksData.length} tracks`)
+      } catch (err) {
+        console.error("Error in page component:", err)
+        setError(err instanceof Error ? err.message : "Failed to fetch courses")
+        console.log("Using fallback data due to error")
+      } finally {
+        setIsLoading(false)
+      }
     }
 
-    // Check if the response has a tracks property and it's an array
-    if (response.success && Array.isArray(response.tracks)) {
-      tracks = response.tracks
-    } else if (response.tracks && Array.isArray(response.tracks)) {
-      // Fallback if success flag is missing but tracks exists
-      tracks = response.tracks
-    } else {
-      throw new Error("No tracks found in API response")
+    loadTracks()
+  }, [])
+
+  // Handle search functionality
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
+
+    if (!query.trim()) {
+      // If query is empty, show all tracks
+      setFilteredTracks(tracks)
+      return
     }
 
-    // Log the processed tracks
-    console.log(`Successfully processed ${tracks.length} tracks`)
-  } catch (err) {
-    console.error("Error in page component:", err)
-    error = err instanceof Error ? err.message : "Failed to fetch courses"
-    // Don't show the error to the user, just log it
-    // We'll use the fallback data from fetchTracks instead
-    console.log("Using fallback data due to error")
+    // Filter tracks based on search query
+    const lowercaseQuery = query.toLowerCase()
+    const filtered = tracks.filter((track) => {
+      return (
+        track.name.toLowerCase().includes(lowercaseQuery) ||
+        track.description.toLowerCase().includes(lowercaseQuery) ||
+        track.instructor.toLowerCase().includes(lowercaseQuery)
+      )
+    })
+
+    setFilteredTracks(filtered)
   }
 
   return (
     <div className="flex flex-col min-h-screen">
-
+     
       {/* Hero Section */}
       <div className="w-full py-12 text-center text-white bg-[#01589a]">
         <h1 className="text-3xl font-bold">Courses</h1>
@@ -50,34 +83,43 @@ export default async function CoursesPage() {
       {/* Main Content */}
       <main className="flex-1 px-4 py-8 md:px-8 max-w-7xl mx-auto w-full">
         {/* Search Bar */}
-        <div className="relative max-w-md mx-auto mb-12">
-          <input
-            type="text"
-            placeholder="Search course"
-            className="w-full px-4 py-3 pl-10 bg-[#f5f5f5] rounded border-none focus:outline-none"
-          />
-          <CiSearch className="absolute w-5 h-5 text-[#999999] left-3 top-1/2 transform -translate-y-1/2" />
-        </div>
+        <SearchBar onSearch={handleSearch} initialQuery={searchQuery} />
 
         {/* All Courses */}
-        <h2 className="mb-8 text-2xl font-bold">All Courses</h2>
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-bold">All Courses</h2>
+          {searchQuery && (
+            <p className="text-sm text-gray-500">
+              {filteredTracks.length} {filteredTracks.length === 1 ? "result" : "results"} for "{searchQuery}"
+            </p>
+          )}
+        </div>
 
-        {error ? (
+        {isLoading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#01589a]"></div>
+          </div>
+        ) : error ? (
           <div className="p-4 mb-4 text-red-700 bg-red-100 rounded-md">
             <div className="flex items-center">
               <FiAlertCircle className="w-5 h-5 mr-2" />
               <p>Error loading courses: {error}</p>
             </div>
           </div>
-        ) : tracks.length === 0 ? (
-          <div className="p-4 mb-4 text-blue-700 bg-blue-100 rounded-md">
-            <p>No courses found. Please check back later.</p>
+        ) : filteredTracks.length === 0 ? (
+          <div className="p-8 mb-4 text-center border rounded-md">
+            <FiAlertCircle className="w-8 h-8 mx-auto mb-4 text-gray-400" />
+            <h3 className="text-xl font-medium mb-2">No courses found</h3>
+            <p className="text-gray-500">
+              {searchQuery
+                ? `No courses match "${searchQuery}". Try a different search term.`
+                : "No courses are currently available. Please check back later."}
+            </p>
           </div>
         ) : (
-          <CourseGrid tracks={tracks} />
+          <CourseGrid tracks={filteredTracks} />
         )}
-      </main>
-
+      </main>      
     </div>
   )
 }
