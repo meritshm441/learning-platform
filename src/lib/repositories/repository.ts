@@ -1,8 +1,7 @@
-import { TracksResponse } from "../types/track"
 
 const API_BASE_URL = "https://tmp-se-projectapi.azurewebsites.net/api"
 
-export async function fetchTracks(): Promise<TracksResponse> {
+export async function fetchTracks() {
   try {
     const response = await fetch(`${API_BASE_URL}/tracks`, {
       cache: "no-store", // Don't cache the response to always get fresh data
