@@ -10,7 +10,7 @@ export default function NotFound() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
+    <div className="flex flex-col items-center justify-center min-h-screen ">
       <div className="w-full max-w-3xl px-6 py-16 text-center">
         {/* Decorative elements */}
         <div className="relative w-64 h-64 mx-auto mb-8">
@@ -40,7 +40,7 @@ export default function NotFound() {
 
           <button
             onClick={() => router.back()}
-            className="px-8 py-3 font-medium transition-all duration-300 bg-white border rounded-lg shadow-md border-gray-200 text-gray-700 hover:bg-gray-50"
+            className="px-8 py-3 font-medium transition-all duration-300  border rounded-lg shadow-md border-gray-200 text-gray-700 hover:bg-gray-50"
           >
             Go Back
           </button>

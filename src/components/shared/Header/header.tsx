@@ -49,7 +49,7 @@ export default function Header() {
   }
 
   return (
-    <header className="border-b border-gray-200 bg-white w-full relative">
+    <header className="border-b border-gray-200  w-full relative">
       <div className="px-4 py-3 lg:px-48 md:px-20 flex items-center justify-between">
         <div className="flex items-center gap-4 md:gap-8">
           
@@ -115,18 +115,18 @@ export default function Header() {
 
             {/* Dropdown */}
             {openDropdown && (
-              <div className="absolute right-0 mt-1 w-40 rounded-md border border-gray-200 bg-white shadow-lg z-50">
+              <div className="absolute right-0 mt-1 w-40 rounded-md border border-gray-200 bg-white  shadow-lg z-50">
                 <div className="py-1 text-md font-normal">
                   <Link
                     href="/portal"
-                    className="flex items-center px-4 py-2  hover:bg-gray-100 hover:text-[#115EA5]"
+                    className="flex items-center px-4 py-2  hover:bg-gray-200 hover:text-[#115EA5]"
                     onClick={() => setOpenDropdown(false)}
                   >
                     <span className="mr-2"><LuGraduationCap className="text-[#115EA5] h-5 w-5" /></span> Portal
                   </Link>
                   <button
                     onClick={logout}
-                    className="flex w-full items-center px-4 py-2  text-sm  hover:bg-gray-100 hover:text-[#115EA5] text-left"
+                    className="flex w-full items-center px-4 py-2  text-sm  hover:bg-gray-200 hover:text-[#115EA5] text-left"
                   >
                     <span className="mr-2"><FaArrowRightToBracket className="text-[#115EA5] h-5 w-5" /></span> Logout
                   </button>
@@ -152,7 +152,7 @@ export default function Header() {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="sm:hidden absolute top-full left-0 right-0 bg-white z-50 border-b border-gray-200 shadow-md">
+        <div className="sm:hidden absolute top-full left-0 right-0  z-50 border-b border-gray-200 shadow-md">
           <div className="px-4 py-4 flex flex-col space-y-4">
             <nav className="flex flex-col space-y-3">
               <Link href="/" className="text-gray-800 hover:text-[#01589a]" onClick={() => setIsMenuOpen(false)}>

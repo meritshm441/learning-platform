@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const OurSolution = () => {
   return (
-    <div className="bg-white w-full flex flex-col justify-center items-center py-[60px] md:py-[80px] lg:py-[120px]">
+    <div className=" w-full flex flex-col justify-center items-center py-[60px] md:py-[80px] lg:py-[120px]">
       <div className="flex flex-col items-center justify-center gap-14 w-full max-w-7xl px-[16px] sm:px-[24px] lg:px-[40px]">
         {/* Header Section */}
         <div className="flex flex-col items-center text-center gap-4 w-full max-w-2xl mx-auto">
@@ -23,7 +23,7 @@ const OurSolution = () => {
           {ourSolutionData.map(({ id, icon: Icon, title, description, price }: SolutionItem) => (
             <div
               key={id}
-              className="group bg-white rounded-lg drop-shadow-xl border border-gray-50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+              className="group  rounded-lg drop-shadow-xl border border-gray-50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
             >
               <div className="flex flex-col items-start justify-start gap-4 p-6">
                 <div className="flex items-start justify-start w-[80px] h-[80px]">

@@ -187,7 +187,7 @@ export default function CheckoutPage() {
                     <FiChevronDown className="h-5 w-5 text-gray-400" />
                   </div>
                   {showGenderDropdown && (
-                    <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded shadow-lg">
+                    <div className="absolute z-10 mt-1 w-full  border border-gray-200 rounded shadow-lg">
                       <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => selectGender("Male")}>
                         Male
                       </div>
@@ -249,7 +249,7 @@ export default function CheckoutPage() {
                     <FiChevronDown className="h-5 w-5 text-gray-400" />
                   </div>
                   {showDisabledDropdown && (
-                    <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded shadow-lg">
+                    <div className="absolute z-10 mt-1 w-full  border border-gray-200 rounded shadow-lg">
                       <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => selectDisabled("Yes")}>
                         Yes
                       </div>
@@ -276,7 +276,7 @@ export default function CheckoutPage() {
 
             {/* Right Column - Payment Summary */}
             <div className="lg:pl-8">
-              <div className="bg-white p-6 rounded-md shadow-md">
+              <div className=" p-6 rounded-md shadow-md">
                 <h3 className="text-2xl font-bold mb-6">$ {coursePrice} USD</h3>
 
                 <div className="mb-6">
