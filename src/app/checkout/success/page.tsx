@@ -28,7 +28,7 @@ export default function CheckoutSuccessPage() {
             </Link>
             <Link
               href="/"
-              className="block w-full bg-white border border-[#01589a] text-[#01589a] py-3 rounded hover:bg-[#f5f5f5]"
+              className="block w-full  border border-[#01589a] text-[#01589a] py-3 rounded hover:bg-[#f5f5f5]"
             >
               Return to Home
             </Link>

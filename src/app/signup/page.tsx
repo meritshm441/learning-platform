@@ -59,7 +59,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen ">
       <div className="flex-1 container mx-auto px-4 py-8">
         <div className="grid md:grid-cols-2 gap-8 items-center max-w-6xl mx-auto">
           <div className="order-2 md:order-1 w-[481px] h-[481px]">

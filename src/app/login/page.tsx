@@ -10,6 +10,7 @@ import { InputWithIcon, PasswordInput } from "@/components/shared/Input"
 import { login_register, google_logo } from "@/lib/constants/images"
 import { loginUser } from "@/lib/repositories/login"
 import Header from "@/components/shared/Header/header"
+import { signIn } from "next-auth/react"
 
 type FormData = {
   email: string
@@ -62,7 +63,7 @@ export default function LoginPage() {
   };
   
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen ">
       <div className="flex-1 container mx-auto px-4 py-8">
         <div className="grid md:grid-cols-2 gap-8 items-center max-w-6xl mx-auto">
           {/* Left Illustration */}
@@ -88,6 +89,7 @@ export default function LoginPage() {
               {/* Google Login */}
               <button
                 type="button"
+                onClick={() => signIn("google", { callbackUrl: "/" })}
                 className="w-full flex items-center justify-center gap-2 border border-[#e6e6e6] rounded p-3 mb-4 hover:bg-[#f5f5f5]"
               >
                 <Image src={google_logo} alt="Google logo" width={24} height={24} />

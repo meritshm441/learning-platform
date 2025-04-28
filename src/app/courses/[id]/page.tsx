@@ -47,7 +47,7 @@ export default async function CourseDetailPage({ params }: any) {
   const learningPoints = getLearningPoints(track.name);
 
   return (
-    <div className=" w-full flex flex-col min-h-screen bg-white">
+    <div className=" w-full flex flex-col min-h-screen ">
       {/* Breadcrumb and Course Header */}
       <div className="bg-[#01589a]  text-white pt-8">
         <div className="w-full mx-auto  px-4 lg:px-48 md:px-20">
@@ -93,7 +93,7 @@ export default async function CourseDetailPage({ params }: any) {
 
             {/* Course Image */}
             <div className="lg:col-span-1">
-              <div className="bg-white p-2">
+              <div className=" p-2">
                 <Image
                   src={track.image || "/placeholder.svg?height=300&width=400"}
                   alt={track.name}
@@ -109,7 +109,7 @@ export default async function CourseDetailPage({ params }: any) {
       </div>
 
       {/* Course Content */}
-      <div className="w-full bg-white mx-auto px-4 pb-8 lg:px-48 md:px-20">
+      <div className="w-full  mx-auto px-4 pb-8 lg:px-48 md:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - What you'll learn */}
           <div className="lg:col-span-2 mt-7">

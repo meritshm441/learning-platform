@@ -1,6 +1,8 @@
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
+
 export const loginUser = async (email: string, password: string) => {
   try {
-    const response = await fetch('https://tmp-se-projectapi.azurewebsites.net/api/auth/login', {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -16,6 +18,7 @@ export const loginUser = async (email: string, password: string) => {
 
     return data;
   } catch (error: any) {
+    console.error('Error during login:', error);
     throw new Error(error.message || 'Something went wrong');
   }
 };
