@@ -8,3 +8,5 @@ export const NextSteps = "/images/NextStep.svg";
 export const NextStepsMobile = "/images/NextStepMobile.svg";
 export const authentication = "/images/authentication.svg";
 export const secureLogin = "/images/secureLogin.svg";
+export const login_register = "/images/login-register.svg";
+export const google_logo = "/images/google_logo.svg";
