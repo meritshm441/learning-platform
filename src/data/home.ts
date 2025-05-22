@@ -5,7 +5,7 @@ import { FaUserGraduate } from "react-icons/fa6";
 
 export const ourSolutionData: SolutionItem[] = [
   {
-    id: 1,
+    id: "6829f1d317460c2f2264a148",
     icon: SD,
     title: "Software Development",
     description:
@@ -13,7 +13,7 @@ export const ourSolutionData: SolutionItem[] = [
     price: "$350",
   },
   {
-    id: 2,
+    id: "6829efe117460c2f2264a134",
     icon: DSM,
     title: "Data Science Mystery",
     description:
@@ -21,7 +21,7 @@ export const ourSolutionData: SolutionItem[] = [
     price: "$350",
   },
   {
-    id: 3,
+    id: "67fd04e1db1ad84c0687b468",
     icon: CCE,
     title: "Cloud Computing Expertise",
     description:

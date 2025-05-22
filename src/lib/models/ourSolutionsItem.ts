@@ -1,6 +1,6 @@
 
 export interface SolutionItem {
-  id: number;
+  id: string;
   icon: string;
   title: string;
   description: string;

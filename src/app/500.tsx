@@ -17,7 +17,7 @@ export default function Custom500() {
 
         <h1 className="mb-4 text-2xl font-bold text-gray-400">Data Not Found</h1>
 
-        <div className="p-4 mb-6 bg-white border rounded-lg shadow-sm border-gray-100">
+        <div className="p-4 mb-6  border rounded-lg shadow-sm border-gray-100">
           <p className="text-gray-400">We're sorry, but the requested information is currently unavailable.</p>
         </div>
 
@@ -31,7 +31,7 @@ export default function Custom500() {
 
           <button
             onClick={() => router.push("/")}
-            className="px-5 py-2 font-medium transition-all duration-300 bg-white border rounded-md border-gray-200 text-gray-700 hover:bg-gray-50"
+            className="px-5 py-2 font-medium transition-all duration-300  border rounded-md border-gray-200 text-gray-700 hover:bg-gray-50"
           >
             Return Home
           </button>

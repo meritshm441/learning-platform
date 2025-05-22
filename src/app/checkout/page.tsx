@@ -2,20 +2,20 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import Link from "next/link"
+import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { z } from "zod"
-import { 
-  FiUser, 
-  FiMail, 
-  FiBook, 
-  FiUsers, 
-  FiPhone, 
-  FiMapPin, 
-  FiHeart, 
-  FiChevronDown, 
-  FiArrowRight 
+import {
+  FiUser,
+  FiMail,
+  FiBook,
+  FiUsers,
+  FiPhone,
+  FiMapPin,
+  FiHeart,
+  FiChevronDown,
+  FiArrowRight,
+  FiLock,
 } from "react-icons/fi"
 
 // Form validation schema
@@ -32,6 +32,14 @@ const checkoutSchema = z.object({
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>
 
+// User data type from localStorage
+type UserData = {
+  firstname: string
+  lastname: string
+  email: string
+  image?: string
+}
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
 export default function CheckoutPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -39,6 +47,7 @@ export default function CheckoutPage() {
   // Get course details from URL params if available
   const courseName = searchParams.get("course") || ""
   const coursePrice = searchParams.get("price") || "350.00"
+  const courseId = searchParams.get("courseId") || "67f85311a3761b766ecff63e"
 
   const [formData, setFormData] = useState<CheckoutFormData>({
     fullName: "",
@@ -55,10 +64,69 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showGenderDropdown, setShowGenderDropdown] = useState(false)
   const [showDisabledDropdown, setShowDisabledDropdown] = useState(false)
+  const [apiError, setApiError] = useState<string | null>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  // Load user data from localStorage on component mount
+  useEffect(() => {
+    // Check if user is logged in by looking for token and user data
+    const token = localStorage.getItem("token")
+    const userData = localStorage.getItem("user")
+
+    if (token && userData) {
+      try {
+        const user = JSON.parse(userData) as UserData
+
+        // Auto-populate form with user data
+        setFormData((prev) => ({
+          ...prev,
+          fullName: `${user.firstname} ${user.lastname}`.trim(),
+          email: user.email,
+        }))
+
+        setIsLoggedIn(true)
+      } catch (error) {
+        console.error("Error parsing user data:", error)
+      }
+    } else {
+      // If not logged in, redirect to login page
+      router.push("/login?redirect=/checkout")
+    }
+
+    // Listen for auth state changes
+    const handleAuthChange = () => {
+      const newToken = localStorage.getItem("token")
+      const newUserData = localStorage.getItem("user")
+
+      if (newToken && newUserData) {
+        try {
+          const user = JSON.parse(newUserData) as UserData
+
+          setFormData((prev) => ({
+            ...prev,
+            fullName: `${user.firstname} ${user.lastname}`.trim(),
+            email: user.email,
+          }))
+
+          setIsLoggedIn(true)
+        } catch (error) {
+          console.error("Error parsing user data:", error)
+        }
+      } else {
+        setIsLoggedIn(false)
+      }
+    }
+
+    window.addEventListener("authStateChanged", handleAuthChange)
+
+    return () => {
+      window.removeEventListener("authStateChanged", handleAuthChange)
+    }
+  }, [router])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    setFormData((prev:any) => ({ ...prev, [name]: value }))
+    setFormData((prev) => ({ ...prev, [name]: value }))
 
     // Clear error when user types
     if (errors[name as keyof CheckoutFormData]) {
@@ -67,27 +135,44 @@ export default function CheckoutPage() {
   }
 
   const selectGender = (gender: string) => {
-    setFormData((prev:any) => ({ ...prev, gender }))
+    setFormData((prev) => ({ ...prev, gender }))
     setShowGenderDropdown(false)
   }
 
   const selectDisabled = (disabled: string) => {
-    setFormData((prev:any) => ({ ...prev, disabled }))
+    setFormData((prev) => ({ ...prev, disabled }))
     setShowDisabledDropdown(false)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setApiError(null)
 
     try {
       // Validate form data
       const validatedData = checkoutSchema.parse(formData)
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      // Send enrollment data to the correct API endpoint
+      const response = await fetch(`${API_BASE_URL}/registrations`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          course: courseId,
+          userData: validatedData,
+        }),
+      })
 
-      console.log("Form submitted successfully:", validatedData)
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null)
+        throw new Error(errorData?.message || `API error: ${response.status}`)
+      }
+
+      const data = await response.json()
+      console.log("Registration successful:", data)
 
       // Redirect to success page
       router.push("/checkout/success")
@@ -103,6 +188,7 @@ export default function CheckoutPage() {
         setErrors(formattedErrors)
       } else {
         console.error("Submission error:", error)
+        setApiError(error instanceof Error ? error.message : "An unexpected error occurred")
       }
     } finally {
       setIsSubmitting(false)
@@ -111,7 +197,6 @@ export default function CheckoutPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      
       {/* Header */}
       <div className="bg-[#01589a] py-8 text-center">
         <h1 className="text-white text-3xl font-bold">Checkout</h1>
@@ -122,38 +207,52 @@ export default function CheckoutPage() {
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold mb-8 text-center">Complete payment</h2>
 
+          {apiError && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">{apiError}</div>
+          )}
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column - Form */}
             <div>
               <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Full Name */}
+                {/* Full Name - Disabled if logged in */}
                 <div className="relative">
-                  <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  {isLoggedIn ? (
+                    <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  ) : (
+                    <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  )}
                   <input
                     type="text"
                     name="fullName"
                     placeholder="Full name"
                     value={formData.fullName}
                     onChange={handleInputChange}
-                    className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f5] rounded border ${
+                    disabled={isLoggedIn}
+                    className={`w-full pl-10 pr-4 py-3 ${isLoggedIn ? "bg-gray-100 text-gray-700" : "bg-[#f5f5f5]"} rounded border ${
                       errors.fullName ? "border-red-500" : "border-transparent"
-                    }`}
+                    } ${isLoggedIn ? "cursor-not-allowed" : ""}`}
                   />
                   {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
                 </div>
 
-                {/* Email */}
+                {/* Email - Disabled if logged in */}
                 <div className="relative">
-                  <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  {isLoggedIn ? (
+                    <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  ) : (
+                    <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  )}
                   <input
                     type="email"
                     name="email"
                     placeholder="Email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className={`w-full pl-10 pr-4 py-3 bg-[#f5f5f5] rounded border ${
+                    disabled={isLoggedIn}
+                    className={`w-full pl-10 pr-4 py-3 ${isLoggedIn ? "bg-gray-100 text-gray-700" : "bg-[#f5f5f5]"} rounded border ${
                       errors.email ? "border-red-500" : "border-transparent"
-                    }`}
+                    } ${isLoggedIn ? "cursor-not-allowed" : ""}`}
                   />
                   {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                 </div>
@@ -187,7 +286,7 @@ export default function CheckoutPage() {
                     <FiChevronDown className="h-5 w-5 text-gray-400" />
                   </div>
                   {showGenderDropdown && (
-                    <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded shadow-lg">
+                    <div className="absolute z-10 mt-1 w-full border border-gray-200 rounded shadow-lg bg-white">
                       <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => selectGender("Male")}>
                         Male
                       </div>
@@ -249,7 +348,7 @@ export default function CheckoutPage() {
                     <FiChevronDown className="h-5 w-5 text-gray-400" />
                   </div>
                   {showDisabledDropdown && (
-                    <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded shadow-lg">
+                    <div className="absolute z-10 mt-1 w-full border border-gray-200 rounded shadow-lg bg-white">
                       <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => selectDisabled("Yes")}>
                         Yes
                       </div>
@@ -276,17 +375,19 @@ export default function CheckoutPage() {
 
             {/* Right Column - Payment Summary */}
             <div className="lg:pl-8">
-              <div className="bg-white p-6 rounded-md shadow-md">
+              <div className="p-6 rounded-md shadow-md">
                 <h3 className="text-2xl font-bold mb-6">$ {coursePrice} USD</h3>
 
                 <div className="mb-6">
                   <label className="block text-sm font-medium mb-2">Select amount</label>
                   <div className="relative">
-                    <select title="menu" className="w-full px-4 py-3 bg-[#f5f5f5] rounded appearance-none pr-10" defaultValue="100">
-                      <option value="100">100</option>
-                      <option value="200">200</option>
-                      <option value="300">300</option>
-                      <option value="400">400</option>
+                    <select
+                      title="menu"
+                      className="w-full px-4 py-3 bg-[#f5f5f5] rounded appearance-none pr-10"
+                      defaultValue="100"
+                    >
+                      <option value="100">350</option>
+
                     </select>
                     <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 pointer-events-none" />
                   </div>
@@ -333,7 +434,6 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
-
     </div>
   )
 }

@@ -1,11 +1,56 @@
-import React from "react";
-import { SolutionItem } from "@/lib/models/ourSolutionsItem";
-import { ourSolutionData } from "@/data/home";
-import Image from "next/image";
+// components/Solutions/OurSolution.tsx
+"use client"
+
+import React, { useEffect, useState } from "react"
+import { ourSolutionData } from "@/data/home"
+import type { SolutionItem } from "@/lib/models/ourSolutionsItem"
+import { SolutionCard } from "./SolutionCard"
+import { fetchTracks } from "@/lib/repositories/courses"
+import { Track } from "@/lib/types/track"
 
 const OurSolution = () => {
+   const [tracks, setTracks] = useState<Track[]>([])
+    const [filteredTracks, setFilteredTracks] = useState<Track[]>([])
+    const [error, setError] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(true)
+    const [searchQuery, setSearchQuery] = useState("")
+  
+    useEffect(() => {
+      async function loadTracks() {
+        try {
+          setIsLoading(true)
+          const response = await fetchTracks()
+  
+          if (!response || typeof response !== "object") {
+            throw new Error("Invalid API response")
+          }
+  
+          let tracksData: Track[] = []
+          if (response.success && Array.isArray(response.tracks)) {
+            tracksData = response.tracks
+          } else if (response.tracks && Array.isArray(response.tracks)) {
+            tracksData = response.tracks
+          } else {
+            throw new Error("No tracks found in API response")
+          }
+  
+          setTracks(tracksData)
+          setFilteredTracks(tracksData)
+          console.log(`Successfully processed ${tracksData.length} tracks`)
+        } catch (err) {
+          console.error("Error in page component:", err)
+          setError(err instanceof Error ? err.message : "Failed to fetch courses")
+          console.log("Using fallback data due to error")
+        } finally {
+          setIsLoading(false)
+        }
+      }
+  
+      loadTracks()
+    }, [])
+  
   return (
-    <div className="bg-white w-full flex flex-col justify-center items-center py-[60px] md:py-[80px] lg:py-[120px]">
+    <div className="w-full flex flex-col justify-center items-center py-[60px] md:py-[80px] lg:py-[120px]">
       <div className="flex flex-col items-center justify-center gap-14 w-full max-w-7xl px-[16px] sm:px-[24px] lg:px-[40px]">
         {/* Header Section */}
         <div className="flex flex-col items-center text-center gap-4 w-full max-w-2xl mx-auto">
@@ -20,43 +65,13 @@ const OurSolution = () => {
 
         {/* Solutions Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full px-4">
-          {ourSolutionData.map(({ id, icon: Icon, title, description, price }: SolutionItem) => (
-            <div
-              key={id}
-              className="group bg-white rounded-lg drop-shadow-xl border border-gray-50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-            >
-              <div className="flex flex-col items-start justify-start gap-4 p-6">
-                <div className="flex items-start justify-start w-[80px] h-[80px]">
-                  <Image
-                    src={Icon}
-                    alt={title}
-                    width={50}
-                    height={50}
-                    className="object-contain w-full h-full"
-                  />
-                </div>
-                <h2 className="text-xl font-bold md:text-[1.25rem] lg:text-xl">
-                  {title}
-                </h2>
-                <p className="font-normal text-left leading-relaxed">
-                  {description}
-                </p>
-                <div className="flex items-center justify-between gap-2 font-bold w-full mt-auto">
-                  <div className="flex items-center justify-center gap-2 font-normal text-sm">
-                    <span className="font-medium text-gray-400">Price:</span>
-                    <span>{price}</span>
-                  </div>
-                  <button className="text-blue-600 font-normal hover:text-blue-800 transition-colors duration-300">
-                    Preview
-                  </button>
-                </div>
-              </div>
-            </div>
+          {ourSolutionData.map((solution: SolutionItem) => (
+            <SolutionCard key={solution.id} track={solution} />
           ))}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default OurSolution;
+export default OurSolution
