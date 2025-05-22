@@ -100,7 +100,7 @@ export default function CourseOnboarding() {
             ({ id, icon: Icon, title, description, price }: SolutionItem) => (
               <div
                 key={id}
-                className="group  rounded-lg h-full drop-shadow-lg border border-gray-100 transition-all duration-300 hover:drop-shadow-xl hover:-translate-y-1"
+                className="group  rounded-lg h-full shadow-md border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
               >
                 <div className="flex flex-col items-start justify-start gap-2 p-3">
                   <div className="flex items-center justify-center w-[30px] h-[30px] bg-[#f9fafb] rounded-full">

@@ -2,51 +2,37 @@
 
 import { useState, useEffect } from "react"
 import { CourseGrid } from "@/components/Courses/course-grid"
-import { fetchTracks } from "@/lib/repositories/courses"
-import type { Track } from "@/lib/types/track"
+import { fetchCourses } from "@/lib/repositories/courses"
 import { FiAlertCircle, FiArrowRight } from "react-icons/fi"
 import Link from "next/link"
 import { SearchBar } from "@/components/Courses/search-bar"
+import type { Course } from "@/lib/types/course"
 
 export default function CoursesPage() {
-  const [tracks, setTracks] = useState<Track[]>([])
-  const [filteredTracks, setFilteredTracks] = useState<Track[]>([])
+  const [courses, setCourses] = useState<Course[]>([])
+  const [filteredCourses, setFilteredCourses] = useState<Course[]>([])
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
 
   useEffect(() => {
-    async function loadTracks() {
+    async function loadCourses() {
       try {
         setIsLoading(true)
-        const response = await fetchTracks()
-
-        if (!response || typeof response !== "object") {
-          throw new Error("Invalid API response")
-        }
-
-        let tracksData: Track[] = []
-        if (response.success && Array.isArray(response.tracks)) {
-          tracksData = response.tracks
-        } else if (response.tracks && Array.isArray(response.tracks)) {
-          tracksData = response.tracks
-        } else {
-          throw new Error("No tracks found in API response")
-        }
-
-        setTracks(tracksData)
-        setFilteredTracks(tracksData)
-        console.log(`Successfully processed ${tracksData.length} tracks`)
+        // fetchCourses returns Course[]
+        const coursesData: Course[] = await fetchCourses()
+        setCourses(coursesData)
+        setFilteredCourses(coursesData) // Initialize filteredCourses with all courses
+        console.log(`Loaded ${coursesData.length} courses`)
       } catch (err) {
-        console.error("Error in page component:", err)
-        setError(err instanceof Error ? err.message : "Failed to fetch courses")
-        console.log("Using fallback data due to error")
+        console.error("Failed to load courses:", err)
+        setError(err instanceof Error ? err.message : "Unexpected error occurred")
       } finally {
         setIsLoading(false)
       }
     }
 
-    loadTracks()
+    loadCourses()
   }, [])
 
   // Handle search functionality
@@ -54,27 +40,28 @@ export default function CoursesPage() {
     setSearchQuery(query)
 
     if (!query.trim()) {
-      // If query is empty, show all tracks
-      setFilteredTracks(tracks)
+      // If query is empty, show all courses
+      setFilteredCourses(courses)
       return
     }
 
-    // Filter tracks based on search query
+    // Filter courses based on search query
     const lowercaseQuery = query.toLowerCase()
-    const filtered = tracks.filter((track) => {
+    const filtered = courses.filter((course) => {
       return (
-        track.name.toLowerCase().includes(lowercaseQuery) ||
-        track.description.toLowerCase().includes(lowercaseQuery) ||
-        track.instructor.toLowerCase().includes(lowercaseQuery)
+        course.title.toLowerCase().includes(lowercaseQuery) ||
+        course.description.toLowerCase().includes(lowercaseQuery) ||
+        course.track.name.toLowerCase().includes(lowercaseQuery) || // Added track name to search
+        course.track.instructor?.toLowerCase().includes(lowercaseQuery) // Added instructor name to search
       )
     })
 
-    setFilteredTracks(filtered)
+    setFilteredCourses(filtered)
   }
 
   return (
     <div className="flex flex-col min-h-screen">
-     
+
       {/* Hero Section */}
       <div className="w-full py-12 text-center text-white bg-[#01589a]">
         <h1 className="text-3xl font-bold">Courses</h1>
@@ -90,7 +77,7 @@ export default function CoursesPage() {
           <h2 className="text-2xl font-bold">All Courses</h2>
           {searchQuery && (
             <p className="text-sm text-gray-500">
-              {filteredTracks.length} {filteredTracks.length === 1 ? "result" : "results"} for "{searchQuery}"
+              {filteredCourses.length} {filteredCourses.length === 1 ? "result" : "results"} for "{searchQuery}"
             </p>
           )}
         </div>
@@ -106,7 +93,7 @@ export default function CoursesPage() {
               <p>Error loading courses: {error}</p>
             </div>
           </div>
-        ) : filteredTracks.length === 0 ? (
+        ) : filteredCourses.length === 0 ? (
           <div className="p-8 mb-4 text-center border rounded-md">
             <FiAlertCircle className="w-8 h-8 mx-auto mb-4 text-gray-400" />
             <h3 className="text-xl font-medium mb-2">No courses found</h3>
@@ -117,9 +104,9 @@ export default function CoursesPage() {
             </p>
           </div>
         ) : (
-          <CourseGrid tracks={filteredTracks} />
+          <CourseGrid tracks={filteredCourses} />
         )}
-      </main>      
+      </main>
     </div>
   )
 }

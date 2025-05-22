@@ -1,56 +1,45 @@
-import NextAuth, { AuthOptions, Session, SessionOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-interface CustomSessionOptions extends SessionOptions {
-  jwt: boolean;
+import NextAuth from "next-auth"
+import GoogleProvider from "next-auth/providers/google"
+import type { NextAuthOptions } from "next-auth"
+
+// Extend the Session and User types to include id and accessToken
+declare module "next-auth" {
+  interface Session {
+    user?: {
+      name?: string | null
+      email?: string | null
+      image?: string | null
+      id?: string
+      accessToken?: string
+    }
+  }
 }
-const authOptions: AuthOptions = {
-  // Configure one or more authentication providers
-  // debug:true,
+
+// Define auth options as a separate variable but don't export it directly
+const authOptions: NextAuthOptions = {
   providers: [
-    
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
-    // ...add more providers here
   ],
   callbacks: {
-    async jwt({ token, account, profile }) {
-      // Persist the OAuth access_token and or the user id to the token right after signin
-      if (account) {
-        token.accessToken = account.access_token;
+    async session({ session, token }) {
+      // Send properties to the client, like an access_token and user id from a provider
+      if (session.user) {
+        session.user.id = token.sub
+        session.user.accessToken = token.accessToken as string
       }
-      await fetch(
-        `https://tmp-se-projectapi.azurewebsites.net/api/admin/auth/login`
-      );
-
-      /*   if (token) {
-        const formData = {
-          data: {
-            name: `${token.name}`,
-            email: `${token.email}`,
-            profileUrl: `${token.picture}`,
-            provider: `${account?.provider}`
-          },
-        };
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/auth/google/callback`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${process.env.STRAPI_POST_API_TOKEN}`,
-            },
-            body: JSON.stringify(formData),
-          }
-        );
-      } */
-      return token;
-    },
-    async redirect({ url, baseUrl }) {
-      return url;
+      return session
     },
   },
-};
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+  pages: {
+    signIn: "/login",
+  },
+}
+
+// Create the handler with the auth options
+const handler = NextAuth(authOptions)
+
+// Export the handler functions directly
+export { handler as GET, handler as POST }
