@@ -5,9 +5,10 @@ import Link from "next/link"
 import type { Track } from "@/lib/types/track"
 import { StarRating } from "@/components/Courses/star-rating"
 import { useState } from "react"
+import { Course } from "@/lib/types/course"
 
 interface CourseGridProps {
-  tracks: Track[]
+  tracks: Course[]
 }
 
 export function CourseGrid({ tracks }: CourseGridProps) {
@@ -20,6 +21,7 @@ export function CourseGrid({ tracks }: CourseGridProps) {
       [trackId]: true,
     }))
   }
+console.log("tracks", tracks);
 
   return (
     <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -32,7 +34,7 @@ export function CourseGrid({ tracks }: CourseGridProps) {
                   ? "/placeholder.svg?height=200&width=400"
                   : track.image || "/placeholder.svg?height=200&width=400"
               }
-              alt={track.name}
+              alt={track.title}
               width={400}
               height={200}
               className="object-cover w-full h-[150px]"
@@ -40,8 +42,9 @@ export function CourseGrid({ tracks }: CourseGridProps) {
               unoptimized={track.image?.includes("cloudinary.com")}
             />
           </div>
-          <h3 className="mb-2 text-xl font-bold">{track.name}</h3>
+          <h3 className="mb-2 text-xl font-bold">{track.title}</h3>
           <p className="mb-4 text-sm text-gray-700">{track.description}</p>
+          
           <div className="flex items-center mb-2">
             <StarRating rating={4.0} />
             <span className="ml-2 text-lg font-bold">4.0</span>

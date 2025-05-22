@@ -41,7 +41,7 @@ export default function Loading() {
   }, [])
 
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center bg-white z-50">
+    <div className="fixed inset-0 flex flex-col items-center justify-center  z-50">
       <div className="w-full max-w-md px-4">
         {/* Logo */}
         <div className="flex justify-center mb-8">
@@ -66,7 +66,7 @@ export default function Loading() {
                   }}
                 >
                   <div
-                    className="bg-white rounded-full p-2 shadow-md"
+                    className=" rounded-full p-2 shadow-md"
                     style={{
                       transform: `rotate(-${index * 72 + progress * 3.6}deg)`,
                       transition: "transform 0.5s ease-out",
@@ -80,7 +80,7 @@ export default function Loading() {
               {/* Center pulsing circle */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-12 h-12 bg-[#01589a] rounded-full flex items-center justify-center animate-pulse">
-                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8  rounded-full flex items-center justify-center">
                     <div className="w-4 h-4 bg-[#01589a] rounded-full"></div>
                   </div>
                 </div>

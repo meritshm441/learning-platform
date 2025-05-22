@@ -1,0 +1,6 @@
+export { ClientDashboard } from "./dashboard"
+export { Sidebar } from "./sidebar"
+export { StatsCards } from "./stats-cards"
+export { RevenueChart } from "./revenue-chart"
+export { InvoicesList } from    "./invoice-list"
+export { ModeToggle } from "./mode-toggle"

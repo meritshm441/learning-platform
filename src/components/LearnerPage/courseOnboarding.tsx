@@ -8,9 +8,9 @@ import { FaGraduationCap } from "react-icons/fa6";
 
 export default function CourseOnboarding() {
   return (
-    <div className="min-h-screen w-full bg-white  md:px-48 flex flex-col md:flex-row gap-8 mx-auto p-8">
+    <div className="min-h-screen w-full   xl:px-48 flex flex-col lg:flex-row gap-8  py-8 px-4 lg:py-16 lg:px-8">
       {/* Left side - Onboarding steps */}
-      <div className="flex flex-col gap-6 w-full md:w-1/2">
+      <div className="flex flex-col gap-6 w-full lg:w-1/2">
         {[
           {
             icon: <BiLogIn className="w-8 h-8" />,
@@ -29,28 +29,28 @@ export default function CourseOnboarding() {
           },
         ].map((step, index) => (
           <div key={index} className="flex flex-col items-center">
-            <div className="bg-white rounded-lg p-6 drop-shadow-md w-full">
+            <div className=" rounded-lg p-6 drop-shadow-md w-full">
               <div className="flex gap-4">
                 <div className="text-[#01589A]">{step.icon}</div>
                 <div>
-                  <h2 className="text-lg md:text-xl font-bold mb-2">
+                  <h2 className="text-lg lg:text-xl font-bold mb-2">
                     {step.title}
                   </h2>
-                  <p className="text-gray-700 text-sm md:text-base">
+                  <p className="text-gray-700 text-sm lg:text-base">
                     {step.desc}
                   </p>
                 </div>
               </div>
             </div>
             {index < 2 && (
-              <FaArrowDown className="w-6 h-6 md:w-8 md:h-8 text-[#01589A] my-2" />
+              <FaArrowDown className="w-6 h-6 lg:w-8 lg:h-8 text-[#01589A] my-2" />
             )}
           </div>
         ))}
       </div>
 
       {/* Right side - Process and Courses */}
-      <div className="bg-white rounded-lg p-4 md:p-2 drop-shadow-md w-full md:w-1/2 flex flex-col md:max-h-[616px] overflow-y-auto">
+      <div className=" rounded-lg p-4 lg:p-2 drop-shadow-md w-full lg:w-1/2 flex flex-col lg:max-h-[616px] overflow-y-auto">
         {/* Step 1 & 2 - Secure Login & Authentication */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           {/* Step 1 */}
@@ -100,7 +100,7 @@ export default function CourseOnboarding() {
             ({ id, icon: Icon, title, description, price }: SolutionItem) => (
               <div
                 key={id}
-                className="group bg-white rounded-lg h-full drop-shadow-lg border border-gray-100 transition-all duration-300 hover:drop-shadow-xl hover:-translate-y-1"
+                className="group  rounded-lg h-full shadow-md border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
               >
                 <div className="flex flex-col items-start justify-start gap-2 p-3">
                   <div className="flex items-center justify-center w-[30px] h-[30px] bg-[#f9fafb] rounded-full">

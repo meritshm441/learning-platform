@@ -1,6 +1,5 @@
 
-const API_BASE_URL = "https://tmp-se-projectapi.azurewebsites.net/api"
-
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string
 export async function fetchTracks() {
   try {
     const response = await fetch(`${API_BASE_URL}/tracks`, {
