@@ -1,76 +1,102 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
-export const signupUser = async ({
-    firstName,
-    lastName,
-    email,
-    password,
-  }: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-  }) => {
-    try {
-      const response = await fetch(
-        `${API_BASE_URL}/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ firstName, lastName, email, password }),
-        }
-      );
-  
-      if (!response.ok) {
-        throw new Error("Signup failed");
-      }
-  
-      return await response.json();
-    } catch (error) {
-      throw error;
-    }
-  };
+// Add this interface for consistent error handling
+interface AuthError {
+  message: string;
+  errors?: Array<{
+    message: string;
+  }>;
+  statusCode?: number;
+}
 
-  export const verifyEmail = async (token: string) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/verify-email`, {
+// Modified signupUser function with error display
+export const signupUser = async ({
+  firstName,
+  lastName,
+  email,
+  password,
+}: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}) => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/auth/register`,
+      {
         method: "POST",
-        
-        body: JSON.stringify({ token }),
-      });
-  
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(errorResponse.errors?.[0]?.message || "Email verification failed");
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firstName, lastName, email, password }),
       }
-  
-      return await response.json();
-    } catch (error) {
-      throw error;
+    );
+
+    if (!response.ok) {
+      const errorData: AuthError = await response.json();
+      throw new Error(errorData.message || "Signup failed");
     }
-  };
-  
+
+    return await response.json();
+  } catch (error: any) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unexpected error occurred");
+  }
+};
+
+// Modified verifyEmail function with error display
+export const verifyEmail = async (data: string, token: string) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/verify-email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({ data }),
+    });
+
+    if (!response.ok) {
+      const errorData: AuthError = await response.json();
+      throw new Error(errorData.errors?.[0]?.message || "Email verification failed");
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unexpected error occurred");
+  }
+};
+
+// Modified resendVerificationToken function with error display
 export const resendVerificationToken = async () => {
   try {
     const response = await fetch(
       `${API_BASE_URL}/auth/resend-token`,
       {
         method: "POST",
-        
       }
     );
 
     if (!response.ok) {
-      throw new Error("Failed to resend verification token");
+      const errorData: AuthError = await response.json();
+      throw new Error(errorData.message || "Failed to resend verification token");
     }
 
     return await response.json();
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unexpected error occurred");
   }
 };
 
+// Modified forgotPassword function with error display
 export const forgotPassword = async (email: string) => {
   try {
     const response = await fetch(
@@ -85,28 +111,20 @@ export const forgotPassword = async (email: string) => {
     );
 
     if (!response.ok) {
-      // Handle HTTP errors (e.g., 400, 500)
-      let errorMessage = "Failed to initiate password reset.";
-      try {
-        const errorData = await response.json();
-        if (errorData && errorData.message) {
-          errorMessage = errorData.message; // Use the message from the API response if available
-        }
-      } catch (jsonError) {
-        // If parsing JSON fails, keep the default message
-      }
-      throw new Error(errorMessage);
+      const errorData: AuthError = await response.json();
+      throw new Error(errorData.message || "Failed to initiate password reset");
     }
 
-    // Parse the JSON response
-    const data = await response.json();
-    return data; // Return the data from the successful response
+    return await response.json();
   } catch (error: any) {
-    // Catch network errors or errors thrown above
-    throw error;
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unexpected error occurred");
   }
 };
 
+// Modified resetPassword function with error display
 export const resetPassword = async (
   id: string,
   password: string,
@@ -117,27 +135,20 @@ export const resetPassword = async (
       `${API_BASE_URL}/auth/reset-password/${id}`,
       {
         method: "POST",
-        
         body: JSON.stringify({ password, confirmPassword }),
       }
     );
 
     if (!response.ok) {
-      let errorMessage = "Failed to reset password.";
-      try {
-        const errorData = await response.json();
-        if (errorData && errorData.message) {
-          errorMessage = errorData.message;
-        }
-      } catch (jsonError) {
-        // Keep default message
-      }
-      throw new Error(errorMessage);
+      const errorData: AuthError = await response.json();
+      throw new Error(errorData.message || "Failed to reset password");
     }
 
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (error: any) {
-    throw error;
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unexpected error occurred");
   }
 };

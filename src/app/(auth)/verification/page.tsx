@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { BsArrowRight } from "react-icons/bs";
 import { MdPassword } from "react-icons/md";
 import { RiMailLine } from "react-icons/ri";
-import { useState, useEffect } from "react"; // Import useState and useEffect
+import { useState, useEffect } from "react";
 import { resendVerificationToken, verifyEmail } from "@/lib/repositories/authRepository";
 
 export default function OTPVerification() {
@@ -21,26 +21,27 @@ export default function OTPVerification() {
     },
   });
 
-  const [showResend, setShowResend] = useState(false); 
+  const token = typeof window !== 'undefined' 
+    ? localStorage.getItem("authToken") || "" 
+    : "";
+
+  const [showResend, setShowResend] = useState(false);
+
   useEffect(() => {
-    // Set a timer to show the resend button after 3 seconds
     const timer = setTimeout(() => {
       setShowResend(true);
     }, 3000);
-
-    // Clear the timer if the component unmounts
+    
     return () => clearTimeout(timer);
-  }, []); // Empty dependency array means this effect runs only once after the initial render
+  }, []);
 
   const onSubmit = async (data: { otp: string }) => {
     console.log("Form submitted:", data);
     try {
-      const response = await verifyEmail(data.otp);
+      const response = await verifyEmail(data.otp, token);
       console.log("Email verification successful:", response);
-      // Handle successful verification
     } catch (error: any) {
       console.error("Email verification failed:", error);
-      // Handle verification failure
     }
   };
 
@@ -48,14 +49,12 @@ export default function OTPVerification() {
     try {
       const response = await resendVerificationToken();
       console.log("Resend token successful:", response);
-      // Optionally, display a success message
     } catch (error: any) {
       console.error("Failed to resend token:", error);
-      // Optionally, display an error message
     }
   };
 
-  return (
+   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1 container mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-center gap-8">
         

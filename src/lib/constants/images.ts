@@ -10,3 +10,4 @@ export const authentication = "/images/authentication.svg";
 export const secureLogin = "/images/secureLogin.svg";
 export const login_register = "/images/login-register.svg";
 export const google_logo = "/images/google_logo.svg";
+export const admin_cli_blue = "/images/admin_cli_blue.svg"
