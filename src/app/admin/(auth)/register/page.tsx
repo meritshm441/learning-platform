@@ -87,9 +87,11 @@ const onSubmit = async (data: FormData) => {
       <div className="flex justify-end p-6 border ">
         <div className="flex items-center gap-4">
           <span className="text-gray-600">Already have an account?</span>
+          <Link href="/admin/login" className="text-blue-600 hover:underline">
           <Button variant="default" className="bg-blue-700 hover:bg-blue-800">
             Login <span className="ml-1">→</span>
           </Button>
+          </Link>
         </div>
       </div>
 
