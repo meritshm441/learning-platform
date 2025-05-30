@@ -2,6 +2,7 @@ import Link from 'next/link'
 import React from 'react'
 
 const HeroSection = () => {
+
   return (
     <div className="bg-[linear-gradient(to_left,_#01589A00_0%,_#99BCD7_100%),url('/images/homepage.jpg')] bg-cover bg-center min-h-screen w-full flex items-center justify-center text-white px-4 sm:px-8 md:px-12 lg:px-48 pt-10">
       <div className="w-full h-full flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-8">

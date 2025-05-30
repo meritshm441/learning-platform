@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { FaCheck } from "react-icons/fa6";
 import { LuEyeOff } from "react-icons/lu";
 import { MdError, MdOutlineRemoveRedEye } from "react-icons/md";
@@ -121,3 +122,17 @@ export const PasswordInput = ({
     </div>
   );
 };
+
+type PhoneInputProps = {
+  name: string
+  placeholder?: string
+  register: any
+  setValue: any
+  required?: boolean
+  error?: boolean
+  valid?: boolean
+  errorMessage?: string
+  defaultCountry?: string
+  value?: string
+}
+
