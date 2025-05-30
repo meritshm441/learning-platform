@@ -59,6 +59,9 @@ export default function CoursesPage() {
     setFilteredCourses(filtered)
   }
 
+  console.log("Filtered courses:", filteredCourses);
+  
+
   return (
     <div className="flex flex-col min-h-screen">
 
@@ -104,7 +107,7 @@ export default function CoursesPage() {
             </p>
           </div>
         ) : (
-          <CourseGrid tracks={filteredCourses} />
+          <CourseGrid courses={filteredCourses} />
         )}
       </main>
     </div>

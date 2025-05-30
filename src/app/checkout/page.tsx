@@ -47,7 +47,8 @@ export default function CheckoutPage() {
   // Get course details from URL params if available
   const courseName = searchParams.get("course") || ""
   const coursePrice = searchParams.get("price") || "350.00"
-  const courseId = searchParams.get("courseId") || "67f85311a3761b766ecff63e"
+  const courseId = searchParams.get("trackId") || "67f85311a3761b766ecff63e"
+console.log("courseId", courseId);
 
   const [formData, setFormData] = useState<CheckoutFormData>({
     fullName: "",
@@ -92,6 +93,7 @@ export default function CheckoutPage() {
       // If not logged in, redirect to login page
       router.push("/login?redirect=/checkout")
     }
+    console.log("user",)
 
     // Listen for auth state changes
     const handleAuthChange = () => {
@@ -144,56 +146,62 @@ export default function CheckoutPage() {
     setShowDisabledDropdown(false)
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setApiError(null)
-
-    try {
-      // Validate form data
-      const validatedData = checkoutSchema.parse(formData)
-
-      // Send enrollment data to the correct API endpoint
-      const response = await fetch(`${API_BASE_URL}/registrations`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "authorization": `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          course: courseId,
-          userData: validatedData,
-        }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null)
-        throw new Error(errorData?.message || `API error: ${response.status}`)
-      }
-
-      const data = await response.json()
-      console.log("Registration successful:", data)
-
-      // Redirect to success page
-      router.push("/checkout/success")
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        // Convert Zod errors to a more usable format
-        const formattedErrors: Partial<Record<keyof CheckoutFormData, string>> = {}
-        error.errors.forEach((err) => {
-          if (err.path[0]) {
-            formattedErrors[err.path[0] as keyof CheckoutFormData] = err.message
-          }
-        })
-        setErrors(formattedErrors)
-      } else {
-        console.error("Submission error:", error)
-        setApiError(error instanceof Error ? error.message : "An unexpected error occurred")
-      }
-    } finally {
-      setIsSubmitting(false)
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setIsSubmitting(true)
+  setApiError(null)
+  
+  
+  try {
+    // Validate form data
+    const validatedData = checkoutSchema.parse(formData)
+    
+    // Get the current origin URL
+    const currentOrigin = typeof window !== 'undefined' 
+      ? window.location.origin 
+      : process.env.NEXT_PUBLIC_API_BASE_URL
+    
+    // Send enrollment data to the correct API endpoint
+    const response = await fetch(`${API_BASE_URL}/enrollments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "authorization": `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        track: courseId,
+        amount: parseInt(coursePrice),
+        paystackCallbackUrl: `${currentOrigin}/payment`
+      }),
+    })
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null)
+      throw new Error(errorData?.message || `API error: ${response.status}`)
     }
+    
+    const data = await response.json()
+    console.log("Registration successful:", data)
+    
+    // Redirect to success page
+    router.push("/checkout/success")
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const formattedErrors: Partial<Record<keyof CheckoutFormData, string>> = {}
+      error.errors.forEach((err) => {
+        if (err.path[0]) {
+          formattedErrors[err.path[0] as keyof CheckoutFormData] = err.message
+        }
+      })
+      setErrors(formattedErrors)
+    } else {
+      console.error("Submission error:", error)
+      setApiError(error instanceof Error ? error.message : "An unexpected error occurred")
+    }
+  } finally {
+    setIsSubmitting(false)
   }
+}
 
   return (
     <div className="flex flex-col min-h-screen">

@@ -169,7 +169,7 @@ export default async function CourseDetailPage(props: { params: Promise<{ id: st
                   <Link
                     href={`/checkout?course=${encodeURIComponent(
                       course.title,
-                    )}&price=${course.price || course.track?.price || 350}`}
+                    )}&price=${course.price || course.track?.price || 350}&trackId=${course.track?.id}`}
                     className="block w-full bg-[#01589a] text-white py-3 rounded hover:bg-[#115ea5]"
                   >
                     Enroll

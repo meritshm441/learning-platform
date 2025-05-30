@@ -92,7 +92,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col items-center w-full p-4 md:p-8 lg:p-12 max-w-lg gap-8 ">
+    <div className="flex flex-col items-center w-full p-4 md:p-8 lg:p-12 max-w-lg gap-8">
       <h1 className="md:text-3xl text-lg font-medium text-[#404040] text-center">
         Log in to continue your
         <br />

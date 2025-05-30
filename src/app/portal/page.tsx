@@ -67,7 +67,8 @@ export default function PortalPage() {
         // Check if user is logged in
         const token = localStorage.getItem("token");
         if (!token) {
-          throw new Error("You must be logged in to view your enrollments");
+          window.location.href = "/login";
+          return;
         }
 
         // Fetch enrollments from API

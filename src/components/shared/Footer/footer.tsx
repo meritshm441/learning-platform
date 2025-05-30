@@ -5,7 +5,7 @@ import Image from "next/image";
 import { BsArrowUpSquare } from "react-icons/bs";
 import { cli_white } from "@/lib/constants/images";
 import FooterList from "./FooterList";
-import { contact, menu, social } from "@/data/footer";
+import { about, contact, menu, social } from "@/data/footer";
 
 
 
@@ -26,10 +26,11 @@ export default function Footer() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full md:w-[80%] lg:w-[70%] xl:w-[60%]">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full md:w-[80%] lg:w-[70%] xl:w-[60%]">
             <FooterList title="Menu" list={menu} />
             <FooterList title="Contact" list={contact} />
             <FooterList title="Social" list={social} />
+            <FooterList title="about" list={about}/>
           </div>
         </div>
 
