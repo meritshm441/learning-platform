@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form"
 import { FaSpinner } from "react-icons/fa"
 import { PasswordInput } from "../shared/Input"
 
-export function ResetPasswordForm({ token }: { token: string }) {
+export function ResetPasswordForm({ token: _token }: { token?: string }) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -17,7 +17,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
   const {
     register,
     handleSubmit,
-    watch,
+    getValues,
     formState: { errors, dirtyFields },
   } = useForm({
     mode: "onChange",
@@ -27,9 +27,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
     },
   })
 
-  const password = watch("password")
-
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { password: string; confirmPassword: string }) => {
     setError("")
 
     if (data.password !== data.confirmPassword) {
@@ -44,7 +42,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000))
       router.push("/admin/auth/login?reset=success")
-    } catch (err) {
+    } catch {
       setError("Failed to reset password. Please try again.")
     } finally {
       setIsLoading(false)
@@ -52,9 +50,9 @@ export function ResetPasswordForm({ token }: { token: string }) {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-white dark:bg-[#1d1b20] rounded-lg shadow-md">
-      <div className="text-center mb-8">
-        <div className="text-[#01589a] font-bold text-3xl flex items-center justify-center mb-2">
+    <div className="mx-auto w-full max-w-md rounded-lg bg-white p-6 shadow-md dark:bg-[#1d1b20]">
+      <div className="mb-8 text-center">
+        <div className="mb-2 flex items-center justify-center text-3xl font-bold text-[#01589a]">
           <span className="text-4xl">C</span>
           <span className="text-xl">Client</span>
         </div>
@@ -62,7 +60,9 @@ export function ResetPasswordForm({ token }: { token: string }) {
         <p className="text-gray-600 dark:text-gray-400">Create a new password for your account</p>
       </div>
 
-      {error && <div className="bg-[#F7E9EA] text-[#A61D24] p-3 rounded-md mb-4 text-sm">{error}</div>}
+      {error && (
+        <div className="mb-4 rounded-md bg-[#F7E9EA] p-3 text-sm text-[#A61D24]">{error}</div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-2">
@@ -96,7 +96,8 @@ export function ResetPasswordForm({ token }: { token: string }) {
             register={register}
             validationRules={{
               required: "Please confirm your password",
-              validate: (value: string) => value === password || "Passwords do not match",
+              validate: (value: string) =>
+                value === getValues("password") || "Passwords do not match",
             }}
             error={!!errors.confirmPassword}
             valid={dirtyFields.confirmPassword && !errors.confirmPassword}
@@ -104,7 +105,11 @@ export function ResetPasswordForm({ token }: { token: string }) {
           />
         </div>
 
-        <button type="submit" className="w-full bg-[#01589a] hover:bg-[#01589a]/90 text-white" disabled={isLoading}>
+        <button
+          type="submit"
+          className="w-full bg-[#01589a] text-white hover:bg-[#01589a]/90"
+          disabled={isLoading}
+        >
           {isLoading ? (
             <>
               <FaSpinner className="mr-2 h-4 w-4 animate-spin" /> Resetting...

@@ -1,8 +1,17 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { FaEdit, FaTrash, FaSearch, FaPlus, FaCheck, FaClock, FaSpinner, FaExclamationTriangle } from "react-icons/fa"
+import {
+  FaEdit,
+  FaTrash,
+  FaSearch,
+  FaPlus,
+  FaCheck,
+  FaClock,
+  FaSpinner,
+  FaExclamationTriangle,
+} from "react-icons/fa"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -103,13 +112,11 @@ export function InvoicesList() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
   const [invoices, setInvoices] = useState<Invoice[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [usingMockData, setUsingMockData] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [usingMockData, setUsingMockData] = useState(true)
 
   const fetchInvoices = async () => {
     setIsLoading(true)
-    setError(null)
     setUsingMockData(false)
 
     try {
@@ -117,7 +124,6 @@ export function InvoicesList() {
       setInvoices(response.invoices || [])
     } catch (err) {
       console.error("Error fetching invoices:", err)
-      setError("Failed to connect to the API. Using mock data instead.")
 
       // Fallback to mock data
       setInvoices(MOCK_INVOICES)
@@ -127,15 +133,11 @@ export function InvoicesList() {
     }
   }
 
-  useEffect(() => {
-    fetchInvoices()
-  }, [])
-
   const filteredInvoices = invoices.filter(
     (invoice) =>
       invoice.learner.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       invoice.learner.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      invoice.learner.email.toLowerCase().includes(searchQuery.toLowerCase()),
+      invoice.learner.email.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   if (isLoading) {
@@ -148,14 +150,16 @@ export function InvoicesList() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Invoices</h1>
+      <h1 className="mb-6 text-2xl font-bold">Invoices</h1>
 
       {usingMockData && (
-        <Alert className="mb-6 bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-900/30">
+        <Alert className="mb-6 border-yellow-200 bg-yellow-50 dark:border-yellow-900/30 dark:bg-yellow-900/20">
           <FaExclamationTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
           <AlertTitle>API Connection Failed</AlertTitle>
-          <AlertDescription className="flex justify-between items-center">
-            <span>Using mock data for demonstration purposes. The API server might be unavailable.</span>
+          <AlertDescription className="flex items-center justify-between">
+            <span>
+              Using mock data for demonstration purposes. The API server might be unavailable.
+            </span>
             <Button
               variant="outline"
               size="sm"
@@ -168,9 +172,9 @@ export function InvoicesList() {
         </Alert>
       )}
 
-      <div className="flex justify-between mb-6">
+      <div className="mb-6 flex justify-between">
         <div className="relative w-full max-w-md">
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <FaSearch className="absolute top-1/2 left-3 -translate-y-1/2 transform text-gray-400" />
           <Input
             placeholder="Search Invoices"
             className="pl-10"
@@ -178,18 +182,21 @@ export function InvoicesList() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <Button className="bg-[#01589a] hover:bg-[#01589a]/90" onClick={() => router.push("/admin/invoices/create")}>
+        <Button
+          className="bg-[#01589a] hover:bg-[#01589a]/90"
+          onClick={() => router.push("/admin/invoices/create")}
+        >
           <FaPlus className="mr-2 h-4 w-4" /> Create invoice
         </Button>
       </div>
 
       {filteredInvoices.length === 0 ? (
-        <div className="bg-white dark:bg-[#1d1b20] rounded-lg p-8 text-center">
+        <div className="rounded-lg bg-white p-8 text-center dark:bg-[#1d1b20]">
           <p className="text-gray-500">No invoices found</p>
         </div>
       ) : (
-        <div className="bg-white dark:bg-[#1d1b20] rounded-lg overflow-hidden">
-          <div className="grid grid-cols-5 gap-4 p-4 bg-[#f5f5f5] dark:bg-[#404040] font-medium">
+        <div className="overflow-hidden rounded-lg bg-white dark:bg-[#1d1b20]">
+          <div className="grid grid-cols-5 gap-4 bg-[#f5f5f5] p-4 font-medium dark:bg-[#404040]">
             <div>Learner</div>
             <div>Email</div>
             <div>Amount</div>
@@ -199,7 +206,7 @@ export function InvoicesList() {
 
           <div className="divide-y divide-gray-200 dark:divide-gray-700">
             {filteredInvoices.map((invoice) => (
-              <div key={invoice._id} className="grid grid-cols-5 gap-4 p-4 items-center">
+              <div key={invoice._id} className="grid grid-cols-5 items-center gap-4 p-4">
                 <div className="flex items-center gap-3">
                   <Avatar className="h-8 w-8">
                     {invoice.learner.profileImage ? (
@@ -227,9 +234,13 @@ export function InvoicesList() {
                       invoice.status === "paid"
                         ? "bg-green-500 hover:bg-green-600"
                         : "bg-yellow-500 hover:bg-yellow-600"
-                    } text-white flex items-center gap-1`}
+                    } flex items-center gap-1 text-white`}
                   >
-                    {invoice.status === "paid" ? <FaCheck className="h-3 w-3" /> : <FaClock className="h-3 w-3" />}
+                    {invoice.status === "paid" ? (
+                      <FaCheck className="h-3 w-3" />
+                    ) : (
+                      <FaClock className="h-3 w-3" />
+                    )}
                     {invoice.status}
                   </Badge>
                   <div className="flex gap-2">

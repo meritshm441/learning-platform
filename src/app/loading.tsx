@@ -6,6 +6,17 @@ import { BsDatabase } from "react-icons/bs"
 import { LuSparkles } from "react-icons/lu"
 
 export default function Loading() {
+  const [particles] = useState(() =>
+    [...Array(20)].map((_, i) => ({
+      id: i,
+      width: Math.random() * 10 + 5,
+      height: Math.random() * 10 + 5,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      animationDuration: Math.random() * 5 + 3,
+      animationDelay: Math.random() * 5,
+    }))
+  )
   const [progress, setProgress] = useState(0)
   const [loadingText, setLoadingText] = useState("Preparing your learning journey")
 
@@ -41,47 +52,47 @@ export default function Loading() {
   }, [])
 
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center  z-50">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center">
       <div className="w-full max-w-md px-4">
         {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <div className="text-[#01589a] text-4xl font-bold flex items-center">
+        <div className="mb-8 flex justify-center">
+          <div className="flex items-center text-4xl font-bold text-[#01589a]">
             <span>CLient</span>
-            <LuSparkles className="ml-2 h-6 w-6 text-[#d89614] animate-pulse" />
+            <LuSparkles className="ml-2 h-6 w-6 animate-pulse text-[#d89614]" />
           </div>
         </div>
 
         {/* Animated Icons */}
-        <div className="relative h-32 mb-8">
+        <div className="relative mb-8 h-32">
           <div className="absolute inset-0 flex items-center justify-center">
             {/* Orbiting icons */}
-            <div className="relative w-24 h-24">
+            <div className="relative h-24 w-24">
               {[BiBookOpen, BiCode, BsDatabase, BiGlobe, BiServer].map((Icon, index) => (
                 <div
                   key={index}
-                  className="absolute w-10 h-10 flex items-center justify-center"
+                  className="absolute flex h-10 w-10 items-center justify-center"
                   style={{
                     transform: `rotate(${index * 72 + progress * 3.6}deg) translateX(60px)`,
                     transition: "transform 0.5s ease-out",
                   }}
                 >
                   <div
-                    className=" rounded-full p-2 shadow-md"
+                    className="rounded-full p-2 shadow-md"
                     style={{
                       transform: `rotate(-${index * 72 + progress * 3.6}deg)`,
                       transition: "transform 0.5s ease-out",
                     }}
                   >
-                    <Icon className="w-6 h-6 text-[#01589a]" />
+                    <Icon className="h-6 w-6 text-[#01589a]" />
                   </div>
                 </div>
               ))}
 
               {/* Center pulsing circle */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-12 h-12 bg-[#01589a] rounded-full flex items-center justify-center animate-pulse">
-                  <div className="w-8 h-8  rounded-full flex items-center justify-center">
-                    <div className="w-4 h-4 bg-[#01589a] rounded-full"></div>
+                <div className="flex h-12 w-12 animate-pulse items-center justify-center rounded-full bg-[#01589a]">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full">
+                    <div className="h-4 w-4 rounded-full bg-[#01589a]"></div>
                   </div>
                 </div>
               </div>
@@ -90,14 +101,14 @@ export default function Loading() {
         </div>
 
         {/* Loading text */}
-        <div className="text-center mb-4">
-          <p className="text-[#01589a] font-medium">{loadingText}...</p>
+        <div className="mb-4 text-center">
+          <p className="font-medium text-[#01589a]">{loadingText}...</p>
         </div>
 
         {/* Progress bar */}
-        <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4 overflow-hidden">
+        <div className="mb-4 h-2.5 w-full overflow-hidden rounded-full bg-gray-200">
           <div
-            className="bg-[#01589a] h-2.5 rounded-full transition-all duration-300 ease-out"
+            className="h-2.5 rounded-full bg-[#01589a] transition-all duration-300 ease-out"
             style={{ width: `${progress}%` }}
           ></div>
         </div>
@@ -106,18 +117,18 @@ export default function Loading() {
         <div className="text-center text-sm text-gray-500">{Math.round(progress)}% complete</div>
 
         {/* Knowledge particles */}
-        <div className="relative h-20 mt-8 overflow-hidden">
-          {[...Array(20)].map((_, i) => (
+        <div className="relative mt-8 h-20 overflow-hidden">
+          {particles.map((particle) => (
             <div
-              key={i}
-              className="absolute bg-[#01589a] opacity-20 rounded-full"
+              key={particle.id}
+              className="absolute rounded-full bg-[#01589a] opacity-20"
               style={{
-                width: `${Math.random() * 10 + 5}px`,
-                height: `${Math.random() * 10 + 5}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animation: `float ${Math.random() * 5 + 3}s linear infinite`,
-                animationDelay: `${Math.random() * 5}s`,
+                width: `${particle.width}px`,
+                height: `${particle.height}px`,
+                left: `${particle.left}%`,
+                top: `${particle.top}%`,
+                animation: `float ${particle.animationDuration}s linear infinite`,
+                animationDelay: `${particle.animationDelay}s`,
               }}
             ></div>
           ))}

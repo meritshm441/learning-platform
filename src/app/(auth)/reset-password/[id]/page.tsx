@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { PasswordInput } from "@/components/shared/Input"
 import { resetPassword } from "@/lib/repositories/authRepository"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { BsArrowRight } from "react-icons/bs"
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -42,7 +42,8 @@ export default function ResetPassword({ params }: ResetPasswordPageProps) {
   const {
     register,
     handleSubmit,
-    watch,
+    getValues,
+    control,
     formState: { errors },
   } = useForm({
     mode: "onChange",
@@ -52,7 +53,7 @@ export default function ResetPassword({ params }: ResetPasswordPageProps) {
     },
   })
 
-  const password = watch("password")
+  const passwordValue = useWatch({ control, name: "password", defaultValue: "" })
 
   const onSubmit = async (data: { password: string; confirmPassword: string }) => {
     if (!resetId) {
@@ -63,13 +64,19 @@ export default function ResetPassword({ params }: ResetPasswordPageProps) {
     setIsSubmitting(true)
     try {
       await resetPassword(resetId, data.password, data.confirmPassword)
-      toast.success("Your password has been reset successfully. You can now log in with your new password.")
+      toast.success(
+        "Your password has been reset successfully. You can now log in with your new password."
+      )
       setTimeout(() => {
         router.push("/login")
       }, 2000)
-    } catch (error: any) {
+    } catch (error) {
       console.error("Password reset failed:", error)
-      toast.error(error.message || "Failed to reset your password. Please try again.")
+      if (error instanceof Error) {
+        toast.error(error.message || "Failed to reset your password. Please try again.")
+      } else {
+        toast.error("Failed to reset your password. Please try again.")
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -77,10 +84,10 @@ export default function ResetPassword({ params }: ResetPasswordPageProps) {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col min-h-screen w-full">
-        <main className="flex-1 container mx-auto px-4 py-12 flex items-center justify-center">
+      <div className="flex min-h-screen w-full flex-col">
+        <main className="container mx-auto flex flex-1 items-center justify-center px-4 py-12">
           <div className="text-center">
-            <div className="w-12 h-12 border-4 border-t-[#01589a] border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-t-[#01589a] border-r-transparent border-b-transparent border-l-transparent"></div>
             <p className="text-[#666666]">Loading...</p>
           </div>
         </main>
@@ -89,17 +96,17 @@ export default function ResetPassword({ params }: ResetPasswordPageProps) {
   }
 
   return (
-    <div className="flex flex-col min-h-screen w-full">
-      <main className="flex-1 container mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-center gap-8">
+    <div className="flex min-h-screen w-full flex-col">
+      <main className="container mx-auto flex flex-1 flex-col items-center justify-center gap-8 px-4 py-12 md:flex-row">
         <ToastContainer />
 
         <div className="w-full max-w-lg">
-          <h1 className="text-3xl font-bold text-[#404040] mb-4">Reset Password</h1>
-          <p className="text-[#666666] mb-6">Create a new password for your account</p>
+          <h1 className="mb-4 text-3xl font-bold text-[#404040]">Reset Password</h1>
+          <p className="mb-6 text-[#666666]">Create a new password for your account</p>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-4">
-              <label className="block text-[#404040] mb-2">New Password</label>
+              <label className="mb-2 block text-[#404040]">New Password</label>
               <PasswordInput
                 name="password"
                 placeholder="Enter new password"
@@ -107,7 +114,7 @@ export default function ResetPassword({ params }: ResetPasswordPageProps) {
                 toggle={() => setShowPassword(!showPassword)}
                 register={register}
                 error={!!errors.password}
-                valid={password && password.length >= 8}
+                valid={passwordValue.length >= 8}
                 errorMessage={errors.password?.message as string}
                 validationRules={{
                   required: "Password is required",
@@ -119,7 +126,7 @@ export default function ResetPassword({ params }: ResetPasswordPageProps) {
               />
             </div>
             <div className="mb-6">
-              <label className="block text-[#404040] mb-2">Confirm Password</label>
+              <label className="mb-2 block text-[#404040]">Confirm Password</label>
               <PasswordInput
                 name="confirmPassword"
                 placeholder="Confirm new password"
@@ -127,17 +134,18 @@ export default function ResetPassword({ params }: ResetPasswordPageProps) {
                 toggle={() => setShowConfirmPassword(!showConfirmPassword)}
                 register={register}
                 error={!!errors.confirmPassword}
-                valid={watch("confirmPassword") && watch("confirmPassword") === password}
+                valid={!errors.confirmPassword}
                 errorMessage={errors.confirmPassword?.message as string}
                 validationRules={{
                   required: "Please confirm your password",
-                  validate: (value: string) => value === password || "Passwords do not match",
+                  validate: (value: string) =>
+                    value === getValues("password") || "Passwords do not match",
                 }}
               />
             </div>
             <button
               type="submit"
-              className="w-full flex items-center justify-center bg-[#01589a] text-white py-3 px-4 rounded hover:bg-[#115ea5]"
+              className="flex w-full items-center justify-center rounded bg-[#01589a] px-4 py-3 text-white hover:bg-[#115ea5]"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Resetting..." : "Reset Password"}{" "}

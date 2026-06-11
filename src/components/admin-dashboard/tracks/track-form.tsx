@@ -46,17 +46,17 @@ export function TrackForm({ mode, initialData }: TrackFormProps) {
 
   return (
     <div className="p-6">
-      <div className="flex items-center gap-2 mb-6">
+      <div className="mb-6 flex items-center gap-2">
         <h1 className="text-gray-500">Tracks</h1>
         <span>/</span>
         <h1 className="text-2xl font-bold">{title}</h1>
       </div>
 
-      <div className="bg-[#f9f9f9] dark:bg-[#1d1b20] p-6 rounded-lg">
+      <div className="rounded-lg bg-[#f9f9f9] p-6 dark:bg-[#1d1b20]">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="relative">
-              <div className="absolute left-3 top-1/2 text-gray-400">
+              <div className="absolute top-1/2 left-3 text-gray-400">
                 <FaGraduationCap />
               </div>
               <Label htmlFor="title">Course Title</Label>
@@ -69,7 +69,7 @@ export function TrackForm({ mode, initialData }: TrackFormProps) {
             </div>
 
             <div className="relative">
-              <div className="absolute left-3 top-1/2 text-gray-400">
+              <div className="absolute top-1/2 left-3 text-gray-400">
                 <FaDollarSign />
               </div>
               <Label htmlFor="price">Price</Label>
@@ -83,7 +83,7 @@ export function TrackForm({ mode, initialData }: TrackFormProps) {
           </div>
 
           <div className="relative">
-            <div className="absolute left-3 top-1/2 text-gray-400">
+            <div className="absolute top-1/2 left-3 text-gray-400">
               <FaUser />
             </div>
             <Label htmlFor="instructor">Instructor</Label>
@@ -96,7 +96,7 @@ export function TrackForm({ mode, initialData }: TrackFormProps) {
           </div>
 
           <div className="relative">
-            <div className="absolute left-3 top-1/2 text-gray-400">
+            <div className="absolute top-1/2 left-3 text-gray-400">
               <FaClock />
             </div>
             <Label htmlFor="duration">Duration</Label>
@@ -115,13 +115,13 @@ export function TrackForm({ mode, initialData }: TrackFormProps) {
           </div>
 
           <div className="relative">
-            <div className="absolute left-3 top-1/2 text-gray-400">
+            <div className="absolute top-1/2 left-3 text-gray-400">
               <FaPen />
             </div>
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              className="pl-10 min-h-[100px]"
+              className="min-h-[100px] pl-10"
               value={formData.description}
               onChange={(e) => handleChange("description", e.target.value)}
             />

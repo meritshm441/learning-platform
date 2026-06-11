@@ -15,7 +15,7 @@ export interface Course {
     instructor?: string
     image?: string
     duration?: string
-    courses?: any[]
+    courses?: Course[]
     price?: number
   }
   category?: string
@@ -24,8 +24,7 @@ export interface Course {
   enrollmentStatus?: string
 }
 
-  export interface CourseCategory {
-    name: string
-    courses: Course[]
-  }
-  
+export interface CourseCategory {
+  name: string
+  courses: Course[]
+}

@@ -29,9 +29,9 @@ export function RevenueChart({ data }: RevenueChartProps) {
             tickFormatter={(value) => `$${value}`}
           />
           <Tooltip
-            formatter={(value, name) => {
-              const val = Array.isArray(value) ? value[0] : value;
-              return [`$${Number(val).toLocaleString()}`, "Revenue"];
+            formatter={(value) => {
+              const val = Array.isArray(value) ? value[0] : value
+              return [`$${Number(val).toLocaleString()}`, "Revenue"]
             }}
             labelFormatter={(label) => `Month: ${label}`}
           />

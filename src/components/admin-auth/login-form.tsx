@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { useForm } from "react-hook-form"
 import { FaEnvelope, FaSpinner } from "react-icons/fa"
 import { useAuth } from "@/lib/context/auth-context"
@@ -27,7 +28,7 @@ export function LoginForm() {
     },
   })
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { email: string; password: string }) => {
     setError("")
     setIsLoading(true)
 
@@ -35,7 +36,7 @@ export function LoginForm() {
       // In a real app, this would call your API
       await login(data.email, data.password)
       router.push("/admin/dashboard")
-    } catch (err) {
+    } catch {
       setError("Invalid email or password. Please try again.")
     } finally {
       setIsLoading(false)
@@ -43,41 +44,49 @@ export function LoginForm() {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white dark:bg-[#1d1b20] rounded-lg shadow-md overflow-hidden">
+    <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-lg bg-white shadow-md dark:bg-[#1d1b20]">
       <div className="flex flex-col md:flex-row">
         {/* Left side - Blue background with logo and text */}
-        <div className="w-full md:w-2/5 bg-[#01589a] text-white p-8 flex flex-col">
+        <div className="flex w-full flex-col bg-[#01589a] p-8 text-white md:w-2/5">
           <div className="mb-8">
-            <div className="text-white font-bold text-3xl flex items-center">
+            <div className="flex items-center text-3xl font-bold text-white">
               <span className="text-4xl">C</span>
               <span className="text-xl">Client</span>
             </div>
           </div>
 
-          <div className="flex-grow flex flex-col justify-center">
-            <h1 className="text-2xl font-bold mb-4">Welcome Back</h1>
+          <div className="flex flex-grow flex-col justify-center">
+            <h1 className="mb-4 text-2xl font-bold">Welcome Back</h1>
             <p className="text-lg">Sign in to access your admin dashboard.</p>
           </div>
 
           <div className="mt-auto">
-            <img src="/skateboarder-illustration.png" alt="Illustration" className="max-w-full h-auto" />
+            <Image
+              src="/skateboarder-illustration.png"
+              alt="Illustration"
+              width={400}
+              height={300}
+              className="h-auto max-w-full"
+            />
           </div>
         </div>
 
         {/* Right side - Login form */}
-        <div className="w-full md:w-3/5 p-8">
-          <div className="flex justify-end mb-6">
+        <div className="w-full p-8 md:w-3/5">
+          <div className="mb-6 flex justify-end">
             <div className="text-sm">
               Don&apos;t have an account?{" "}
-              <Link href="/admin/auth/register" className="text-[#01589a] font-medium hover:underline">
+              <Link href="/admin/register" className="font-medium text-[#01589a] hover:underline">
                 Register
               </Link>
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold mb-6">Sign in to your account</h2>
+          <h2 className="mb-6 text-2xl font-bold">Sign in to your account</h2>
 
-          {error && <div className="bg-[#F7E9EA] text-[#A61D24] p-3 rounded-md mb-4 text-sm">{error}</div>}
+          {error && (
+            <div className="mb-4 rounded-md bg-[#F7E9EA] p-3 text-sm text-[#A61D24]">{error}</div>
+          )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
@@ -98,7 +107,7 @@ export function LoginForm() {
             <div className="space-y-2">
               <div className="flex justify-between">
                 <label htmlFor="password">Password</label>
-                <Link href="/admin/auth/forgot-password" className="text-sm text-[#01589a] hover:underline">
+                <Link href="/forgot-password" className="text-sm text-[#01589a] hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -120,7 +129,7 @@ export function LoginForm() {
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full bg-[#01589a] hover:bg-[#01589a]/90 text-white py-3"
+                className="w-full bg-[#01589a] py-3 text-white hover:bg-[#01589a]/90"
                 disabled={isLoading}
               >
                 {isLoading ? (

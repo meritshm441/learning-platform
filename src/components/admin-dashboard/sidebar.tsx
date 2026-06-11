@@ -18,15 +18,15 @@ import {
 export function Sidebar() {
   const pathname = usePathname()
 
-  const isActive = (path:any) => {
+  const isActive = (path: string) => {
     return pathname === path
   }
 
   return (
-    <div className="w-60 bg-[#01589a] dark:bg-primary text-white flex flex-col h-full">
-      <div className="p-4 border-b border-[#115ea5]">
+    <div className="dark:bg-primary flex h-full w-60 flex-col bg-[#01589a] text-white">
+      <div className="border-b border-[#115ea5] p-4">
         <Link href="/" className="flex items-center gap-2">
-          <div className="text-[#28ace2] font-bold text-2xl flex items-center">
+          <div className="flex items-center text-2xl font-bold text-[#28ace2]">
             <span className="text-3xl">C</span>
             <span className="text-sm">Client</span>
           </div>
@@ -72,7 +72,7 @@ export function Sidebar() {
           />
         </ul>
       </nav>
-      <div className="p-2 mt-auto">
+      <div className="mt-auto p-2">
         <ul className="space-y-1">
           <NavItem
             href="/admin/settings"
@@ -83,7 +83,7 @@ export function Sidebar() {
           <li>
             <button
               onClick={() => console.log("Logout")}
-              className="flex w-full items-center gap-3 px-3 py-2 rounded-md transition-colors text-white hover:bg-[#115ea5]"
+              className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-white transition-colors hover:bg-[#115ea5]"
             >
               <FaSignOutAlt size={18} />
               <span>Logout</span>
@@ -96,23 +96,18 @@ export function Sidebar() {
 }
 
 type NavItemProps = {
-  href: string;
-  icon: React.ReactNode;
-  text: string;
-  active?: boolean;
-};
+  href: string
+  icon: React.ReactNode
+  text: string
+  active?: boolean
+}
 
-function NavItem({
-  href,
-  icon,
-  text,
-  active = false,
-}: NavItemProps) {
+function NavItem({ href, icon, text, active = false }: NavItemProps) {
   return (
     <li>
       <Link
         href={href}
-        className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
+        className={`flex items-center gap-3 rounded-md px-3 py-2 transition-colors ${
           active ? "bg-white text-[#01589a]" : "text-white hover:bg-[#115ea5]"
         }`}
       >

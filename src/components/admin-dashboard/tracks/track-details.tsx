@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { FaArrowLeft, FaEdit } from "react-icons/fa"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -28,21 +29,26 @@ export function TrackDetails({ id }: TrackDetailsProps) {
 
   return (
     <div className="p-6">
-      <div className="flex items-center gap-2 mb-6">
+      <div className="mb-6 flex items-center gap-2">
         <h1 className="text-gray-500">Tracks</h1>
         <span>/</span>
         <h1 className="text-2xl font-bold">details</h1>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-1">
-          <div className="bg-white dark:bg-[#1d1b20] rounded-lg overflow-hidden shadow-sm">
-            <div className="h-64 overflow-hidden">
-              <img src={track.image || "/placeholder.svg"} alt={track.title} className="w-full h-full object-cover" />
+          <div className="overflow-hidden rounded-lg bg-white shadow-sm dark:bg-[#1d1b20]">
+            <div className="relative h-64 overflow-hidden">
+              <Image
+                src={track.image || "/placeholder.svg"}
+                alt={track.title}
+                fill
+                className="object-cover"
+              />
             </div>
 
             <div className="p-4">
-              <h2 className="text-xl font-bold mb-4">{track.title}</h2>
+              <h2 className="mb-4 text-xl font-bold">{track.title}</h2>
 
               <div className="space-y-4">
                 <div className="flex justify-between border-b pb-2">
@@ -70,32 +76,39 @@ export function TrackDetails({ id }: TrackDetailsProps) {
         </div>
 
         <div className="lg:col-span-2">
-          <div className="bg-white dark:bg-[#1d1b20] rounded-lg p-6 shadow-sm h-full">
+          <div className="h-full rounded-lg bg-white p-6 shadow-sm dark:bg-[#1d1b20]">
             <div className="mb-6">
-              <h3 className="text-xl font-bold mb-4">Description</h3>
+              <h3 className="mb-4 text-xl font-bold">Description</h3>
               <p className="text-gray-700 dark:text-gray-300">{track.description}</p>
             </div>
 
             <div>
-              <h3 className="text-xl font-bold mb-4">Stacks</h3>
+              <h3 className="mb-4 text-xl font-bold">Stacks</h3>
               <div className="flex flex-wrap gap-2">
                 {track.stacks.map((stack, index) => (
-                  <Badge key={index} variant="outline" className="px-4 py-2 border-[#01589a] text-[#01589a]">
+                  <Badge
+                    key={index}
+                    variant="outline"
+                    className="border-[#01589a] px-4 py-2 text-[#01589a]"
+                  >
                     {stack}
                   </Badge>
                 ))}
               </div>
             </div>
 
-            <div className="flex gap-4 mt-8">
-              <Button variant="outline" className="flex items-center gap-2" onClick={() => router.back()}
->
+            <div className="mt-8 flex gap-4">
+              <Button
+                variant="outline"
+                className="flex items-center gap-2"
+                onClick={() => router.back()}
+              >
                 <FaArrowLeft className="h-4 w-4" /> Back
               </Button>
 
               <Button
-                className="bg-[#01589a] hover:bg-[#01589a]/90 flex items-center gap-2"
-                onClick={() => router.push(`/tracks/edit/${id}`)}
+                className="flex items-center gap-2 bg-[#01589a] hover:bg-[#01589a]/90"
+                onClick={() => router.push(`/admin/tracks/edit/${id}`)}
               >
                 <FaEdit className="h-4 w-4" /> Update
               </Button>

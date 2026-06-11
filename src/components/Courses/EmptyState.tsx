@@ -10,9 +10,9 @@ export function EmptyState({
   message = "We couldn't find any courses matching your criteria. Please try a different search or check back later.",
 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center p-8 text-center rounded-lg bg-gray-50">
-      <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-blue-50">
-        <CiSearch className="w-8 h-8 text-[#01589a]" />
+    <div className="flex flex-col items-center justify-center rounded-lg bg-gray-50 p-8 text-center">
+      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50">
+        <CiSearch className="h-8 w-8 text-[#01589a]" />
       </div>
       <h3 className="mb-2 text-lg font-medium">{title}</h3>
       <p className="text-sm text-gray-500">{message}</p>

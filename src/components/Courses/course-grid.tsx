@@ -20,7 +20,7 @@ export function CourseGrid({ courses }: CourseGridProps) {
       [courseId]: true,
     }))
   }
-console.log("courses", courses);
+  console.log("courses", courses)
 
   return (
     <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -36,22 +36,22 @@ console.log("courses", courses);
               alt={course.title}
               width={400}
               height={200}
-              className="object-cover w-full h-[150px]"
+              className="h-[150px] w-full object-cover"
               onError={() => handleImageError(course._id)}
               unoptimized={course.image?.includes("cloudinary.com")}
             />
           </div>
           <h3 className="mb-2 text-xl font-bold">{course.title}</h3>
           <p className="mb-4 text-sm text-gray-700">{course.description}</p>
-          
-          <div className="flex items-center mb-2">
+
+          <div className="mb-2 flex items-center">
             <StarRating rating={4.0} />
             <span className="ml-2 text-lg font-bold">4.0</span>
             <span className="ml-4 text-gray-500">Price: ${course.price}</span>
           </div>
           <Link
             href={`/courses/${course._id}`}
-            className="mt-auto text-center text-white py-3 rounded bg-[#01589a] hover:bg-[#115ea5]"
+            className="mt-auto rounded bg-[#01589a] py-3 text-center text-white hover:bg-[#115ea5]"
           >
             Preview course
           </Link>

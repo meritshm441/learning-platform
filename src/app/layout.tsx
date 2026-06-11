@@ -1,8 +1,6 @@
 import type { ReactNode } from "react"
 import "./globals.css"
 import { Inter } from "next/font/google"
-import Footer from "@/components/shared/Footer/footer"
-import Header from "@/components/shared/Header/header"
 import { NextAuthProvider } from "./provider"
 import LayoutWrapper from "@/components/layoutwrapper"
 
@@ -13,20 +11,14 @@ export const metadata = {
   description: "Unlock Your Potential with Industry-Leading Courses",
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: ReactNode
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div className="flex flex-col min-h-screen">
-          
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className} suppressHydrationWarning>
+        <div className="flex min-h-screen flex-col">
           <NextAuthProvider>
             <LayoutWrapper>{children}</LayoutWrapper>
           </NextAuthProvider>
-
         </div>
       </body>
     </html>

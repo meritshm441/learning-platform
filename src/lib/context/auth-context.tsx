@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { createContext, useContext, useState, type ReactNode } from "react"
 
 type User = {
   id: string
@@ -16,7 +16,13 @@ type AuthContextType = {
   isLoading: boolean
   error?: string
   login: (email: string, password: string) => Promise<void>
-  register: (userData: any) => Promise<void>
+  register: (userData: {
+    firstName: string
+    lastName: string
+    email: string
+    password: string
+    phone?: string
+  }) => Promise<void>
   logout: () => void
   verifyEmail: (code: string) => Promise<void>
   resendVerificationCode: () => Promise<void>
@@ -25,19 +31,21 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
+  const [user, setUser] = useState<User | null>(() => {
     // Check if user is logged in on initial load
     const storedUser = localStorage.getItem("user")
     if (storedUser) {
-      setUser(JSON.parse(storedUser))
+      try {
+        return JSON.parse(storedUser)
+      } catch {
+        return null
+      }
     }
-    setIsLoading(false)
-  }, [])
+    return null
+  })
+  const [isLoading, setIsLoading] = useState(false)
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, _password: string) => {
     setIsLoading(true)
     try {
       // In a real app, this would call your API
@@ -60,7 +68,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const register = async (userData: any) => {
+  const register = async (_userData: {
+    firstName: string
+    lastName: string
+    email: string
+    password: string
+    phone?: string
+  }) => {
     setIsLoading(true)
     try {
       // In a real app, this would call your API
@@ -78,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("user")
   }
 
-  const verifyEmail = async (code: string) => {
+  const verifyEmail = async (_code: string) => {
     setIsLoading(true)
     try {
       // In a real app, this would call your API

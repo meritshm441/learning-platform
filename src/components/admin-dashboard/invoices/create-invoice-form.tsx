@@ -8,7 +8,13 @@ import { FaUser, FaDollarSign, FaCalendarAlt, FaClock, FaPen } from "react-icons
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 
 export function CreateInvoiceForm() {
@@ -33,20 +39,23 @@ export function CreateInvoiceForm() {
 
   return (
     <div className="p-6">
-      <div className="flex items-center gap-2 mb-6">
+      <div className="mb-6 flex items-center gap-2">
         <h1 className="text-gray-500">Invoices</h1>
         <span>/</span>
         <h1 className="text-2xl font-bold">Create invoice</h1>
       </div>
 
-      <div className="bg-[#f9f9f9] dark:bg-[#1d1b20] p-6 rounded-lg">
+      <div className="rounded-lg bg-[#f9f9f9] p-6 dark:bg-[#1d1b20]">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="relative">
-            <div className="absolute left-3 top-1/2 text-gray-400">
+            <div className="absolute top-1/2 left-3 text-gray-400">
               <FaUser />
             </div>
             <Label htmlFor="learner">Select learner</Label>
-            <Select value={formData.learner} onValueChange={(value) => handleChange("learner", value)}>
+            <Select
+              value={formData.learner}
+              onValueChange={(value) => handleChange("learner", value)}
+            >
               <SelectTrigger className="pl-10">
                 <SelectValue placeholder="Select learner" />
               </SelectTrigger>
@@ -59,7 +68,7 @@ export function CreateInvoiceForm() {
           </div>
 
           <div className="relative">
-            <div className="absolute left-3 top-1/2 text-gray-400">
+            <div className="absolute top-1/2 left-3 text-gray-400">
               <FaDollarSign />
             </div>
             <Label htmlFor="amount">Enter amount in USD</Label>
@@ -72,7 +81,7 @@ export function CreateInvoiceForm() {
           </div>
 
           <div className="relative">
-            <div className="absolute left-3 top-1/2 text-gray-400">
+            <div className="absolute top-1/2 left-3 text-gray-400">
               <FaCalendarAlt />
             </div>
             <Label htmlFor="dueDate">Due date</Label>
@@ -86,11 +95,14 @@ export function CreateInvoiceForm() {
           </div>
 
           <div className="relative">
-            <div className="absolute left-3 top-1/2 text-gray-400">
+            <div className="absolute top-1/2 left-3 text-gray-400">
               <FaClock />
             </div>
             <Label htmlFor="status">Status</Label>
-            <Select value={formData.status} onValueChange={(value) => handleChange("status", value)}>
+            <Select
+              value={formData.status}
+              onValueChange={(value) => handleChange("status", value)}
+            >
               <SelectTrigger className="pl-10">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -102,13 +114,13 @@ export function CreateInvoiceForm() {
           </div>
 
           <div className="relative">
-            <div className="absolute left-3 top-1/2 text-gray-400">
+            <div className="absolute top-1/2 left-3 text-gray-400">
               <FaPen />
             </div>
             <Label htmlFor="paymentDetails">Payment details</Label>
             <Textarea
               id="paymentDetails"
-              className="pl-10 min-h-[100px]"
+              className="min-h-[100px] pl-10"
               value={formData.paymentDetails}
               onChange={(e) => handleChange("paymentDetails", e.target.value)}
             />

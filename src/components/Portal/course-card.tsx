@@ -13,7 +13,7 @@ export function CourseCard({ course }: CourseCardProps) {
   const shortName = courseName.replace(/\s+/g, "")
 
   return (
-    <div className="flex flex-col bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="flex flex-col overflow-hidden rounded-lg bg-white shadow-md">
       <div className="relative h-[200px] w-full">
         {course.image ? (
           <Image
@@ -24,18 +24,18 @@ export function CourseCard({ course }: CourseCardProps) {
             unoptimized={course.image?.includes("cloudinary.com")}
           />
         ) : (
-          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+          <div className="flex h-full w-full items-center justify-center bg-gray-200">
             <span className="text-gray-500">No image</span>
           </div>
         )}
       </div>
 
       <div className="p-4">
-        <div className="text-sm text-gray-600 mb-1">{shortName}</div>
-        <h3 className="font-medium text-lg mb-2">{course.title}</h3>
+        <div className="mb-1 text-sm text-gray-600">{shortName}</div>
+        <h3 className="mb-2 text-lg font-medium">{course.title}</h3>
 
         <div className="mt-auto pt-4">
-          <div className="text-[#01589a] font-medium">{course.enrollmentStatus}</div>
+          <div className="font-medium text-[#01589a]">{course.enrollmentStatus}</div>
         </div>
       </div>
     </div>
