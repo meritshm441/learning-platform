@@ -1,17 +1,17 @@
-'use client';
+"use client"
 
-import { usePathname } from 'next/navigation';
-import Header from '@/components/shared/Header/header';
-import Footer from '@/components/shared/Footer/footer';
-import { ReactNode } from 'react';
+import { usePathname } from "next/navigation"
+import Header from "@/components/shared/Header/header"
+import Footer from "@/components/shared/Footer/footer"
+import { ReactNode } from "react"
 
 interface LayoutWrapperProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 export default function LayoutWrapper({ children }: LayoutWrapperProps) {
-  const pathname = usePathname();
-  const isAdminRoute = pathname.startsWith('/admin');
+  const pathname = usePathname()
+  const isAdminRoute = pathname.startsWith("/admin")
 
   return (
     <>
@@ -19,5 +19,5 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
       <main className="flex-1">{children}</main>
       {!isAdminRoute && <Footer />}
     </>
-  );
+  )
 }

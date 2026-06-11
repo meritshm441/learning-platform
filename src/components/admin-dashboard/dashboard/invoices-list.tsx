@@ -22,7 +22,7 @@ type InvoicesListProps = {
 
 export function InvoicesList({ invoices }: InvoicesListProps) {
   if (invoices.length === 0) {
-    return <div className="text-center py-4">No invoices found</div>
+    return <div className="py-4 text-center">No invoices found</div>
   }
 
   return (
@@ -55,8 +55,10 @@ export function InvoicesList({ invoices }: InvoicesListProps) {
           <div className="flex flex-col items-end">
             <div className="font-medium">${invoice.amount.toLocaleString()}</div>
             <span
-              className={`text-xs px-2 py-1 rounded-full ${
-                invoice.status === "paid" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+              className={`rounded-full px-2 py-1 text-xs ${
+                invoice.status === "paid"
+                  ? "bg-green-100 text-green-800"
+                  : "bg-yellow-100 text-yellow-800"
               }`}
             >
               {invoice.status}

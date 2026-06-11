@@ -1,24 +1,27 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string
 
 export const loginUser = async (email: string, password: string) => {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
-    });
+    })
 
-    const data = await response.json();
+    const data = await response.json()
 
     if (!response.ok) {
-      throw new Error(data.message || 'Login failed');
+      throw new Error(data.message || "Login failed")
     }
 
-    return data;
-  } catch (error: any) {
-    console.error('Error during login:', error);
-    throw new Error(error.message || 'Something went wrong');
+    return data
+  } catch (error) {
+    console.error("Error during login:", error)
+    if (error instanceof Error) {
+      throw new Error(error.message || "Something went wrong")
+    }
+    throw new Error("Something went wrong")
   }
-};
+}

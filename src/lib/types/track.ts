@@ -5,9 +5,9 @@ export interface Track {
   price: number
   instructor: string
   duration: string
-  image: string
+  image?: string
   description: string
-  admin: {
+  admin?: {
     _id: string
     firstName: string
     lastName: string
@@ -20,7 +20,7 @@ export interface Track {
     updatedAt: string
     __v: number
   }
-  courses: {
+  courses?: {
     _id: string
     admin: string
     track: string
@@ -31,8 +31,17 @@ export interface Track {
     updatedAt: string
     __v: number
   }[]
-  ratings: any[]
+  ratings?: {
+    _id: string
+    user: string
+    track: string
+    rating: number
+    review: string
+    createdAt: string
+    updatedAt: string
+    __v: number
+  }[]
   createdAt: string
-  updatedAt: string
-  __v: number
+  updatedAt?: string
+  __v?: number
 }

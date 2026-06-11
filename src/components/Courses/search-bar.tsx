@@ -26,22 +26,22 @@ export function SearchBar({ onSearch, initialQuery = "" }: SearchBarProps) {
   }
 
   return (
-    <div className="relative max-w-md mx-auto mb-12">
+    <div className="relative mx-auto mb-12 max-w-md">
       <input
         type="text"
         placeholder="Search course"
         value={query}
         onChange={handleSearch}
-        className="w-full px-4 py-3 pl-10 pr-10  rounded outline-none border border-gray-400 transition-all"
+        className="w-full rounded border border-gray-400 px-4 py-3 pr-10 pl-10 transition-all outline-none"
       />
-      <CiSearch className="absolute w-5 h-5 text-[#999999] left-3 top-1/2 transform -translate-y-1/2" />
+      <CiSearch className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-[#999999]" />
       {query && (
         <button
           onClick={clearSearch}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          className="absolute top-1/2 right-3 -translate-y-1/2 transform text-gray-400 hover:text-gray-600"
           aria-label="Clear search"
         >
-          <FiX className="w-5 h-5" />
+          <FiX className="h-5 w-5" />
         </button>
       )}
     </div>

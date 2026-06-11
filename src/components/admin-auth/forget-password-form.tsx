@@ -10,11 +10,11 @@ export function ForgotPasswordForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
+  const [submittedEmail, setSubmittedEmail] = useState("")
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, dirtyFields },
   } = useForm({
     mode: "onChange",
@@ -23,18 +23,17 @@ export function ForgotPasswordForm() {
     },
   })
 
-  const email = watch("email")
-
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (_data: { email: string }) => {
     setError("")
     setIsLoading(true)
+    setSubmittedEmail(_data.email)
 
     try {
       // In a real app, this would call your API
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000))
       setSuccess(true)
-    } catch (err) {
+    } catch {
       setError("Failed to send reset link. Please try again.")
     } finally {
       setIsLoading(false)
@@ -43,19 +42,19 @@ export function ForgotPasswordForm() {
 
   if (success) {
     return (
-      <div className="w-full max-w-md mx-auto p-6 bg-white dark:bg-[#1d1b20] rounded-lg shadow-md text-center">
-        <div className="text-[#01589a] font-bold text-3xl flex items-center justify-center mb-6">
+      <div className="mx-auto w-full max-w-md rounded-lg bg-white p-6 text-center shadow-md dark:bg-[#1d1b20]">
+        <div className="mb-6 flex items-center justify-center text-3xl font-bold text-[#01589a]">
           <span className="text-4xl">C</span>
           <span className="text-xl">Client</span>
         </div>
-        <h1 className="text-2xl font-bold mb-4">Check Your Email</h1>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
-          We&apos;ve sent a password reset link to <strong>{email}</strong>. Please check your inbox and follow the
-          instructions to reset your password.
+        <h1 className="mb-4 text-2xl font-bold">Check Your Email</h1>
+        <p className="mb-6 text-gray-600 dark:text-gray-400">
+          We&apos;ve sent a password reset link to <strong>{submittedEmail}</strong>. Please check
+          your inbox and follow the instructions to reset your password.
         </p>
         <Link
           href="/admin/auth/login"
-          className="w-full bg-[#01589a] hover:bg-[#01589a]/90 text-white flex items-center justify-center py-2 rounded-md"
+          className="flex w-full items-center justify-center rounded-md bg-[#01589a] py-2 text-white hover:bg-[#01589a]/90"
         >
           Back to Login
         </Link>
@@ -64,9 +63,9 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-white dark:bg-[#1d1b20] rounded-lg shadow-md">
-      <div className="text-center mb-8">
-        <div className="text-[#01589a] font-bold text-3xl flex items-center justify-center mb-2">
+    <div className="mx-auto w-full max-w-md rounded-lg bg-white p-6 shadow-md dark:bg-[#1d1b20]">
+      <div className="mb-8 text-center">
+        <div className="mb-2 flex items-center justify-center text-3xl font-bold text-[#01589a]">
           <span className="text-4xl">C</span>
           <span className="text-xl">Client</span>
         </div>
@@ -76,7 +75,9 @@ export function ForgotPasswordForm() {
         </p>
       </div>
 
-      {error && <div className="bg-[#F7E9EA] text-[#A61D24] p-3 rounded-md mb-4 text-sm">{error}</div>}
+      {error && (
+        <div className="mb-4 rounded-md bg-[#F7E9EA] p-3 text-sm text-[#A61D24]">{error}</div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-2">
@@ -94,7 +95,11 @@ export function ForgotPasswordForm() {
           />
         </div>
 
-        <button type="submit" className="w-full bg-[#01589a] hover:bg-[#01589a]/90 text-white" disabled={isLoading}>
+        <button
+          type="submit"
+          className="w-full bg-[#01589a] text-white hover:bg-[#01589a]/90"
+          disabled={isLoading}
+        >
           {isLoading ? (
             <>
               <FaSpinner className="mr-2 h-4 w-4 animate-spin" /> Sending...

@@ -12,7 +12,7 @@ import { RevenueChart } from "./revenue-chart"
 import { InvoicesList } from "./invoice-list"
 
 export function ClientDashboard() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   type Stats = {
     collected: number
     pending: number
@@ -137,8 +137,11 @@ export function ClientDashboard() {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
-          <p className="text-red-500 mb-4">{error}</p>
-          <button onClick={() => window.location.reload()} className="bg-[#01589a] text-white px-4 py-2 rounded-md">
+          <p className="mb-4 text-red-500">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="rounded-md bg-[#01589a] px-4 py-2 text-white"
+          >
             Retry
           </button>
         </div>
@@ -149,10 +152,10 @@ export function ClientDashboard() {
   return (
     <div className="flex h-screen bg-[#f5f5f5] dark:bg-[#1d1b20]">
       <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="bg-white dark:bg-[#1d1b20] border-b border-[#e6e6e6] dark:border-[#404040] p-4 flex justify-end items-center gap-4">
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <header className="flex items-center justify-end gap-4 border-b border-[#e6e6e6] bg-white p-4 dark:border-[#404040] dark:bg-[#1d1b20]">
           <ModeToggle />
-          <div className="flex items-center gap-2 bg-[#f5f5f5] dark:bg-[#404040] px-4 py-2 rounded-lg">
+          <div className="flex items-center gap-2 rounded-lg bg-[#f5f5f5] px-4 py-2 dark:bg-[#404040]">
             <Avatar className="h-8 w-8 bg-[#01589a]">
               {user?.lastName ? (
                 <AvatarImage src={user.lastName || "/placeholder.svg"} alt={user.firstName} />
@@ -169,7 +172,7 @@ export function ClientDashboard() {
           </div>
         </header>
         <main className="flex-1 overflow-auto p-6">
-          <div className="max-w-7xl mx-auto">
+          <div className="mx-auto max-w-7xl">
             <div className="mb-6">
               <h1 className="text-2xl font-bold">Dashboard</h1>
               <p className="text-[#666666] dark:text-[#999999]">Welcome back, {user?.firstName}</p>
@@ -177,16 +180,16 @@ export function ClientDashboard() {
 
             {stats && <StatsCards stats={stats} />}
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+            <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
               <div>
-                <h2 className="text-xl font-bold mb-4">Recent Revenue</h2>
-                <div className="bg-white dark:bg-[#1d1b20] rounded-lg p-4 shadow-sm">
+                <h2 className="mb-4 text-xl font-bold">Recent Revenue</h2>
+                <div className="rounded-lg bg-white p-4 shadow-sm dark:bg-[#1d1b20]">
                   <RevenueChart data={revenueData} />
                 </div>
               </div>
               <div>
-                <h2 className="text-xl font-bold mb-4">Latest Invoices</h2>
-                <div className="bg-white dark:bg-[#1d1b20] rounded-lg p-4 shadow-sm">
+                <h2 className="mb-4 text-xl font-bold">Latest Invoices</h2>
+                <div className="rounded-lg bg-white p-4 shadow-sm dark:bg-[#1d1b20]">
                   <InvoicesList invoices={invoices} />
                 </div>
               </div>

@@ -1,21 +1,21 @@
-import Link from "next/link";
-import React from "react";
+import Link from "next/link"
+import React from "react"
 
 interface listItem {
-  id: number;
-  text: string;
-  url?: string;
+  id: number
+  text: string
+  url?: string
 }
 
 interface footerProps {
-  title: string;
-  list: listItem[];
+  title: string
+  list: listItem[]
 }
 
 const FooterList: React.FC<footerProps> = ({ title, list }) => {
   return (
     <nav>
-      <p className="font-bold text-h1 mb-4">{title}</p>
+      <p className="text-h1 mb-4 font-bold">{title}</p>
       <ul className="space-y-2">
         {list.map((item) =>
           item.url ? (
@@ -30,7 +30,7 @@ const FooterList: React.FC<footerProps> = ({ title, list }) => {
         )}
       </ul>
     </nav>
-  );
-};
+  )
+}
 
-export default FooterList;
+export default FooterList

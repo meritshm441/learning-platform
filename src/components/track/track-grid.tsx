@@ -35,21 +35,21 @@ export function TrackGrid({ tracks }: CourseGridProps) {
               alt={track.name}
               width={400}
               height={200}
-              className="object-cover w-full h-[150px]"
+              className="h-[150px] w-full object-cover"
               onError={() => handleImageError(track._id)}
               unoptimized={track.image?.includes("cloudinary.com")}
             />
           </div>
           <h3 className="mb-2 text-xl font-bold">{track.name}</h3>
           <p className="mb-4 text-sm text-gray-700">{track.description}</p>
-          <div className="flex items-center mb-2">
+          <div className="mb-2 flex items-center">
             <StarRating rating={4.0} />
             <span className="ml-2 text-lg font-bold">4.0</span>
             <span className="ml-4 text-gray-500">Price: ${track.price}</span>
           </div>
           <Link
             href={`/track/${track._id}`}
-            className="mt-auto text-center text-white py-3 rounded bg-[#01589a] hover:bg-[#115ea5]"
+            className="mt-auto rounded bg-[#01589a] py-3 text-center text-white hover:bg-[#115ea5]"
           >
             Preview Track
           </Link>

@@ -34,7 +34,7 @@ export interface InvoiceResponse {
     updatedAt: string
   }
 }
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string
 /**
  * Creates a new invoice and initializes a Paystack transaction
  * @returns The invoice data with Paystack payment link
@@ -45,7 +45,7 @@ export async function createInvoice(params: CreateInvoiceParams): Promise<Invoic
     headers: {
       "Content-Type": "application/json",
     },
-    
+
     body: JSON.stringify(params),
   })
 
@@ -54,7 +54,7 @@ export async function createInvoice(params: CreateInvoiceParams): Promise<Invoic
     throw new Error(
       `Failed to create invoice: ${response.status} ${response.statusText}${
         errorData ? ` - ${JSON.stringify(errorData)}` : ""
-      }`,
+      }`
     )
   }
 
@@ -65,12 +65,15 @@ export async function createInvoice(params: CreateInvoiceParams): Promise<Invoic
  * Gets an invoice by ID
  */
 export async function getInvoice(invoiceId: string): Promise<InvoiceResponse> {
-  const response = await fetch(`https://tmp-se-projectapi.azurewebsites.net/api/invoices/${invoiceId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
+  const response = await fetch(
+    `https://tmp-se-projectapi.azurewebsites.net/api/invoices/${invoiceId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
 
   if (!response.ok) {
     throw new Error(`Failed to get invoice: ${response.status} ${response.statusText}`)
@@ -88,15 +91,18 @@ export async function updateInvoiceStatus(
     status: string
     paystackReference: string
     paystackTransactionId: string
-  },
+  }
 ): Promise<InvoiceResponse> {
-  const response = await fetch(`https://tmp-se-projectapi.azurewebsites.net/api/invoices/${invoiceId}/status`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
+  const response = await fetch(
+    `https://tmp-se-projectapi.azurewebsites.net/api/invoices/${invoiceId}/status`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  )
 
   if (!response.ok) {
     throw new Error(`Failed to update invoice status: ${response.status} ${response.statusText}`)
@@ -109,7 +115,17 @@ export async function updateInvoiceStatus(
  * Verifies a Paystack payment
  * Note: In a real implementation, this would be a server-side call
  */
-export async function verifyPaystackPayment(reference: string): Promise<any> {
+export async function verifyPaystackPayment(reference: string): Promise<{
+  success: boolean
+  data?: {
+    status: string
+    message: string
+    reference: string
+    amount: number
+    paid_at: string
+  }
+  error?: string
+}> {
   // This is a mock implementation since the actual verification should happen server-side
   // In a real app, you would have a server endpoint that verifies with Paystack
   console.log(`Verifying payment with reference: ${reference}`)
@@ -120,7 +136,9 @@ export async function verifyPaystackPayment(reference: string): Promise<any> {
     data: {
       reference,
       status: "success",
-      transaction_id: "mock_transaction_id",
+      message: "Verification successful",
+      amount: 0,
+      paid_at: new Date().toISOString(),
     },
   }
 }

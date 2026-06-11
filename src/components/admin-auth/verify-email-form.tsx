@@ -28,7 +28,7 @@ export function VerifyEmailForm() {
     },
   })
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { verificationCode: string }) => {
     setError("")
     setIsLoading(true)
 
@@ -39,7 +39,7 @@ export function VerifyEmailForm() {
       setTimeout(() => {
         router.push("/admin/dashboard")
       }, 2000)
-    } catch (err) {
+    } catch {
       setError("Invalid verification code. Please try again.")
     } finally {
       setIsLoading(false)
@@ -54,7 +54,7 @@ export function VerifyEmailForm() {
       // In a real app, this would call your API
       await resendVerificationCode()
       alert("Verification code has been resent to your email")
-    } catch (err) {
+    } catch {
       setError("Failed to resend verification code. Please try again.")
     } finally {
       setIsResending(false)
@@ -63,14 +63,14 @@ export function VerifyEmailForm() {
 
   if (success) {
     return (
-      <div className="w-full max-w-md mx-auto p-6 bg-white dark:bg-[#1d1b20] rounded-lg shadow-md text-center">
-        <FaCheckCircle className="mx-auto text-green-500 text-5xl mb-4" />
-        <h1 className="text-2xl font-bold mb-2">Email Verified!</h1>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+      <div className="mx-auto w-full max-w-md rounded-lg bg-white p-6 text-center shadow-md dark:bg-[#1d1b20]">
+        <FaCheckCircle className="mx-auto mb-4 text-5xl text-green-500" />
+        <h1 className="mb-2 text-2xl font-bold">Email Verified!</h1>
+        <p className="mb-6 text-gray-600 dark:text-gray-400">
           Your email has been successfully verified. Redirecting to dashboard...
         </p>
         <button
-          className="w-full bg-[#01589a] hover:bg-[#01589a]/90 text-white"
+          className="w-full bg-[#01589a] text-white hover:bg-[#01589a]/90"
           onClick={() => router.push("/admin/dashboard")}
         >
           Go to Dashboard
@@ -80,9 +80,9 @@ export function VerifyEmailForm() {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-white dark:bg-[#1d1b20] rounded-lg shadow-md">
-      <div className="text-center mb-8">
-        <div className="text-[#01589a] font-bold text-3xl flex items-center justify-center mb-2">
+    <div className="mx-auto w-full max-w-md rounded-lg bg-white p-6 shadow-md dark:bg-[#1d1b20]">
+      <div className="mb-8 text-center">
+        <div className="mb-2 flex items-center justify-center text-3xl font-bold text-[#01589a]">
           <span className="text-4xl">C</span>
           <span className="text-xl">Client</span>
         </div>
@@ -92,7 +92,9 @@ export function VerifyEmailForm() {
         </p>
       </div>
 
-      {error && <div className="bg-[#F7E9EA] text-[#A61D24] p-3 rounded-md mb-4 text-sm">{error}</div>}
+      {error && (
+        <div className="mb-4 rounded-md bg-[#F7E9EA] p-3 text-sm text-[#A61D24]">{error}</div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-2">
@@ -109,7 +111,11 @@ export function VerifyEmailForm() {
           />
         </div>
 
-        <button type="submit" className="w-full bg-[#01589a] hover:bg-[#01589a]/90 text-white" disabled={isLoading}>
+        <button
+          type="submit"
+          className="w-full bg-[#01589a] text-white hover:bg-[#01589a]/90"
+          disabled={isLoading}
+        >
           {isLoading ? (
             <>
               <FaSpinner className="mr-2 h-4 w-4 animate-spin" /> Verifying...
@@ -122,10 +128,14 @@ export function VerifyEmailForm() {
 
       <div className="mt-6 text-center text-sm">
         Didn&apos;t receive a code?{" "}
-        <button onClick={handleResendCode} className="text-[#01589a] hover:underline" disabled={isResending}>
+        <button
+          onClick={handleResendCode}
+          className="text-[#01589a] hover:underline"
+          disabled={isResending}
+        >
           {isResending ? (
             <>
-              <FaSpinner className="inline mr-1 h-3 w-3 animate-spin" /> Resending...
+              <FaSpinner className="mr-1 inline h-3 w-3 animate-spin" /> Resending...
             </>
           ) : (
             "Resend Code"

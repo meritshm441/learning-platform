@@ -15,9 +15,10 @@ export function PortalTabs() {
   const pathname = usePathname()
 
   return (
-    <div className="flex flex-col sm:flex-row bg-white">
+    <div className="flex flex-col bg-white sm:flex-row">
       {tabs.map((tab) => {
-        const isActive = pathname === tab.href || (tab.href !== "/portal" && pathname?.startsWith(tab.href))
+        const isActive =
+          pathname === tab.href || (tab.href !== "/portal" && pathname?.startsWith(tab.href))
         const Icon = tab.icon
 
         return (
@@ -28,7 +29,7 @@ export function PortalTabs() {
               isActive ? "bg-[#014273] text-white" : "text-gray-700 hover:bg-gray-100"
             }`}
           >
-            <Icon className="w-5 h-5 mr-2" />
+            <Icon className="mr-2 h-5 w-5" />
             <span>{tab.name}</span>
           </Link>
         )

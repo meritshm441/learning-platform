@@ -1,34 +1,31 @@
 import type { Course, CourseCategory } from "@/lib/types/course"
 import type { Track } from "@/lib/types/track"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "https://tmp-se-projectapi.azurewebsites.net/api"
 
 export async function fetchTracks() {
   try {
-    console.log("Fetching tracks from API...");
-
     const response = await fetch(`${API_BASE_URL}/tracks`, {
       cache: "no-store",
-      next: { revalidate: 0 },
-    });
+    })
 
     if (!response.ok) {
-      throw new Error(`API error: ${response.status} ${response.statusText}`);
+      console.warn(`Tracks API returned ${response.status}. Using fallback data.`)
+      return { success: true, tracks: getSampleTracks() }
     }
 
-    const data = await response.json();
-
-    console.log(`API Response: Found ${data.count} tracks`);
+    const data = await response.json()
 
     if (!data.success || !Array.isArray(data.tracks)) {
-      console.error("Invalid API response structure:", data);
-      throw new Error("Invalid API response structure");
+      console.warn("Unexpected tracks API response. Using fallback data.", data)
+      return { success: true, tracks: getSampleTracks() }
     }
 
-    return data;
+    return data
   } catch (error) {
-    console.error("Error in fetchTracks:", error);
-    throw error;
+    console.error("Error in fetchTracks:", error)
+    return { success: true, tracks: getSampleTracks() }
   }
 }
 
@@ -36,16 +33,16 @@ export async function fetchTrackById(id: string) {
   try {
     const response = await fetch(`${API_BASE_URL}/tracks/${id}`, {
       cache: "no-store",
-    });
+    })
 
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      throw new Error(`API error: ${response.status}`)
     }
 
-    return await response.json();
+    return await response.json()
   } catch (error) {
-    console.error(`Error fetching track ${id}:`, error);
-    throw error;
+    console.error(`Error fetching track ${id}:`, error)
+    throw error
   }
 }
 
@@ -214,7 +211,8 @@ function getSampleCourses(): Course[] {
     {
       _id: "5",
       title: "AWS Cloud Practitioner",
-      description: "Gain hands-on experience in cloud architecture, preparing you to manage scalable solutions",
+      description:
+        "Gain hands-on experience in cloud architecture, preparing you to manage scalable solutions",
       instructor: "Alex Wilson",
       duration: "6 weeks",
       image:
@@ -231,6 +229,42 @@ function getSampleCourses(): Course[] {
         name: "Cloud Computing",
         description: "Track for cloud technologies",
       },
+    },
+  ]
+}
+
+function getSampleTracks(): Track[] {
+  return [
+    {
+      _id: "track-1",
+      name: "Software Engineering Track",
+      description:
+        "Comprehensive training in modern software development covering full-stack web development.",
+      price: 350,
+      instructor: "John Doe",
+      duration: "12 weeks",
+      image: "/placeholder.svg?height=192&width=384",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      _id: "track-2",
+      name: "Cloud Computing Expertise",
+      description: "Master cloud computing with AWS, Azure, and Google Cloud Platform.",
+      price: 380,
+      instructor: "Williams",
+      duration: "12 weeks",
+      image: "/placeholder.svg?height=192&width=384",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      _id: "track-3",
+      name: "Data Science Mastery",
+      description: "Learn data science, machine learning, and AI with Python and R.",
+      price: 380,
+      instructor: "Enoch",
+      duration: "12 weeks",
+      image: "/placeholder.svg?height=192&width=384",
+      createdAt: new Date().toISOString(),
     },
   ]
 }

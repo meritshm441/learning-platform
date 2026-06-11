@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { useForm } from "react-hook-form"
 import { FaUser, FaEnvelope, FaPhone, FaSpinner } from "react-icons/fa"
 import { useAuth } from "@/lib/context/auth-context"
@@ -19,7 +20,7 @@ export function RegisterForm() {
   const {
     register,
     handleSubmit,
-    watch,
+    getValues,
     formState: { errors, dirtyFields },
   } = useForm({
     mode: "onChange",
@@ -33,17 +34,22 @@ export function RegisterForm() {
     },
   })
 
-  const password = watch("password")
-
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: {
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+    password: string
+    confirmPassword: string
+  }) => {
     setError("")
     setIsLoading(true)
 
     try {
       // In a real app, this would call your API
       await registerUser(data)
-      router.push("/admin/auth/verify-email")
-    } catch (err) {
+      router.push("/admin/verify-email")
+    } catch {
       setError("Registration failed. Please try again.")
     } finally {
       setIsLoading(false)
@@ -51,44 +57,52 @@ export function RegisterForm() {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white dark:bg-[#1d1b20] rounded-lg shadow-md overflow-hidden">
+    <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-lg bg-white shadow-md dark:bg-[#1d1b20]">
       <div className="flex flex-col md:flex-row">
         {/* Left side - Blue background with logo and text */}
-        <div className="w-full md:w-2/5 bg-[#01589a] text-white p-8 flex flex-col">
+        <div className="flex w-full flex-col bg-[#01589a] p-8 text-white md:w-2/5">
           <div className="mb-8">
-            <div className="text-white font-bold text-3xl flex items-center">
+            <div className="flex items-center text-3xl font-bold text-white">
               <span className="text-4xl">C</span>
               <span className="text-xl">Client</span>
             </div>
           </div>
 
-          <div className="flex-grow flex flex-col justify-center">
-            <h1 className="text-2xl font-bold mb-4">Create Your Account</h1>
+          <div className="flex flex-grow flex-col justify-center">
+            <h1 className="mb-4 text-2xl font-bold">Create Your Account</h1>
             <p className="text-lg">to Manage and Access the Dashboard Effortlessly.</p>
           </div>
 
           <div className="mt-auto">
-            <img src="/skateboarder-illustration.png" alt="Illustration" className="max-w-full h-auto" />
+            <Image
+              src="/skateboarder-illustration.png"
+              alt="Illustration"
+              width={400}
+              height={300}
+              className="h-auto max-w-full"
+            />
           </div>
         </div>
 
         {/* Right side - Registration form */}
-        <div className="w-full md:w-3/5 p-8">
-          <div className="flex justify-end mb-6">
+        <div className="w-full p-8 md:w-3/5">
+          <div className="mb-6 flex justify-end">
             <div className="text-sm">
               Already have an account?{" "}
-              <Link href="/admin/auth/login" className="text-[#01589a] font-medium hover:underline">
+              <Link href="/admin/login" className="font-medium text-[#01589a] hover:underline">
                 Login
               </Link>
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold mb-6">Register to get started</h2>
+          <h2 className="mb-6 text-2xl font-bold">Register to get started</h2>
 
-          {error && <div className="bg-[#F7E9EA] text-[#A61D24] p-3 rounded-md mb-4 text-sm">{error}</div>}
+          {error && (
+            <div className="mb-4 rounded-md bg-[#F7E9EA] p-3 text-sm text-[#A61D24]">{error}</div>
+          )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <label htmlFor="firstName">First Name</label>
                 <InputWithIcon
@@ -178,7 +192,8 @@ export function RegisterForm() {
                 register={register}
                 validationRules={{
                   required: "Please confirm your password",
-                  validate: (value: string) => value === password || "Passwords do not match",
+                  validate: (value: string) =>
+                    value === getValues("password") || "Passwords do not match",
                 }}
                 error={!!errors.confirmPassword}
                 valid={dirtyFields.confirmPassword && !errors.confirmPassword}
@@ -189,7 +204,7 @@ export function RegisterForm() {
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full bg-[#01589a] hover:bg-[#01589a]/90 text-white py-3"
+                className="w-full bg-[#01589a] py-3 text-white hover:bg-[#01589a]/90"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -202,13 +217,13 @@ export function RegisterForm() {
               </button>
             </div>
 
-            <div className="text-xs text-center text-gray-500 mt-4">
+            <div className="mt-4 text-center text-xs text-gray-500">
               By confirming your email, you agree to our{" "}
-              <Link href="/terms" className="text-[#01589a] hover:underline">
+              <Link href="/terms-of-service" className="text-[#01589a] hover:underline">
                 Terms of Service
               </Link>{" "}
               and that you have read and understood our{" "}
-              <Link href="/privacy" className="text-[#01589a] hover:underline">
+              <Link href="/privacy-policy" className="text-[#01589a] hover:underline">
                 Privacy Policy
               </Link>
             </div>

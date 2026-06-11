@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { FaSpinner, FaExclamationTriangle } from "react-icons/fa"
 import { StatsCards } from "./stats-cards"
-import { RevenueChart } from  "./revenue-chart"
+import { RevenueChart } from "./revenue-chart"
 import { InvoicesList } from "./invoices-list"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -99,9 +99,9 @@ const MOCK_DATA = {
 }
 
 export function DashboardPage() {
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [usingMockData, setUsingMockData] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [usingMockData, setUsingMockData] = useState(true)
+  const [_error, setError] = useState<string | null>(null)
   const [stats, setStats] = useState({
     collected: 0,
     pending: 0,
@@ -126,7 +126,6 @@ export function DashboardPage() {
 
   const fetchDashboardData = async () => {
     setIsLoading(true)
-    setError(null)
     setUsingMockData(false)
 
     try {
@@ -141,11 +140,19 @@ export function DashboardPage() {
       const learnersCount = learnersResponse.count || 0
 
       // Calculate stats
-      const paidInvoices = invoicesData.filter((invoice: any) => invoice.status === "paid")
-      const pendingInvoices = invoicesData.filter((invoice: any) => invoice.status === "pending")
+      const paidInvoices = invoicesData.filter((invoice: Invoice) => invoice.status === "paid")
+      const pendingInvoices = invoicesData.filter(
+        (invoice: Invoice) => invoice.status === "pending"
+      )
 
-      const totalCollected = paidInvoices.reduce((sum: number, invoice: any) => sum + invoice.amount, 0)
-      const totalPending = pendingInvoices.reduce((sum: number, invoice: any) => sum + invoice.amount, 0)
+      const totalCollected = paidInvoices.reduce(
+        (sum: number, invoice: Invoice) => sum + invoice.amount,
+        0
+      )
+      const totalPending = pendingInvoices.reduce(
+        (sum: number, invoice: Invoice) => sum + invoice.amount,
+        0
+      )
 
       setStats({
         collected: totalCollected,
@@ -158,7 +165,7 @@ export function DashboardPage() {
       const currentYear = new Date().getFullYear()
       const monthlyRevenue = Array(12).fill(0)
 
-      paidInvoices.forEach((invoice: any) => {
+      paidInvoices.forEach((invoice: Invoice) => {
         const paidDate = new Date(invoice.paidAt || invoice.createdAt)
         if (paidDate.getFullYear() === currentYear) {
           const month = paidDate.getMonth()
@@ -166,13 +173,26 @@ export function DashboardPage() {
         }
       })
 
-      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+      const months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ]
 
       setRevenueData(
         months.map((name, index) => ({
           name,
           value: monthlyRevenue[index],
-        })),
+        }))
       )
     } catch (err) {
       console.error("Error fetching dashboard data:", err)
@@ -188,10 +208,6 @@ export function DashboardPage() {
     }
   }
 
-  useEffect(() => {
-    fetchDashboardData()
-  }, [])
-
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center p-6">
@@ -201,19 +217,21 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="p-6 bg-white">
-      <div className="max-w-7xl mx-auto">
+    <div className="bg-white p-6">
+      <div className="mx-auto max-w-7xl">
         <div className="mb-6">
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <p className="text-[#666666] dark:text-[#999999]">Welcome to the admin portal</p>
         </div>
 
         {usingMockData && (
-          <Alert className="mb-6 bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-900/30">
+          <Alert className="mb-6 border-yellow-200 bg-yellow-50 dark:border-yellow-900/30 dark:bg-yellow-900/20">
             <FaExclamationTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
             <AlertTitle>API Connection Failed</AlertTitle>
-            <AlertDescription className="flex justify-between items-center">
-              <span>Using mock data for demonstration purposes. The API server might be unavailable.</span>
+            <AlertDescription className="flex items-center justify-between">
+              <span>
+                Using mock data for demonstration purposes. The API server might be unavailable.
+              </span>
               <Button
                 variant="outline"
                 size="sm"
@@ -228,16 +246,16 @@ export function DashboardPage() {
 
         <StatsCards stats={stats} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div>
-            <h2 className="text-xl font-bold mb-4">Revenue Overview</h2>
-            <div className="bg-white dark:bg-[#1d1b20] rounded-lg p-4 shadow-sm">
+            <h2 className="mb-4 text-xl font-bold">Revenue Overview</h2>
+            <div className="rounded-lg bg-white p-4 shadow-sm dark:bg-[#1d1b20]">
               <RevenueChart data={revenueData} />
             </div>
           </div>
           <div>
-            <h2 className="text-xl font-bold mb-4">Latest Invoices</h2>
-            <div className="bg-white dark:bg-[#1d1b20] rounded-lg p-4 shadow-sm">
+            <h2 className="mb-4 text-xl font-bold">Latest Invoices</h2>
+            <div className="rounded-lg bg-white p-4 shadow-sm dark:bg-[#1d1b20]">
               <InvoicesList invoices={invoices} />
             </div>
           </div>

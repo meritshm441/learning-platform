@@ -25,10 +25,10 @@ api.interceptors.response.use(
       // Unauthorized - clear token and redirect to login
       localStorage.removeItem("token")
       localStorage.removeItem("user")
-      window.location.href = "/admin/dashboard"
+      window.location.href = "/login"
     }
     return Promise.reject(error)
-  },
+  }
 )
 
 // Auth services
@@ -127,13 +127,26 @@ export const invoicesApi = {
   },
 
   // Create invoice
-  create: async (invoiceData: any) => {
+  create: async (invoiceData: {
+    learner: string
+    track: string
+    amount: number
+    status: string
+    dueDate: string
+  }) => {
     const response = await api.post("/invoices", invoiceData)
     return response.data
   },
 
   // Update invoice
-  update: async (id: string, invoiceData: any) => {
+  update: async (
+    id: string,
+    invoiceData: {
+      status?: string
+      amount?: number
+      dueDate?: string
+    }
+  ) => {
     const response = await api.put(`/invoices/${id}`, invoiceData)
     return response.data
   },
@@ -160,13 +173,27 @@ export const learnersApi = {
   },
 
   // Create learner (register)
-  create: async (learnerData: any) => {
+  create: async (learnerData: {
+    firstName: string
+    lastName: string
+    email: string
+    password: string
+    phone?: string
+  }) => {
     const response = await api.post("/auth/signup/learner", learnerData)
     return response.data
   },
 
   // Update learner
-  update: async (id: string, learnerData: any) => {
+  update: async (
+    id: string,
+    learnerData: {
+      firstName?: string
+      lastName?: string
+      email?: string
+      phone?: string
+    }
+  ) => {
     const response = await api.put(`/users/${id}`, learnerData)
     return response.data
   },
@@ -193,13 +220,30 @@ export const tracksApi = {
   },
 
   // Create track
-  create: async (trackData: any) => {
+  create: async (trackData: {
+    name: string
+    description: string
+    price: number
+    instructor: string
+    duration: string
+    image?: string
+  }) => {
     const response = await api.post("/tracks", trackData)
     return response.data
   },
 
   // Update track
-  update: async (id: string, trackData: any) => {
+  update: async (
+    id: string,
+    trackData: {
+      name?: string
+      description?: string
+      price?: number
+      instructor?: string
+      duration?: string
+      image?: string
+    }
+  ) => {
     const response = await api.put(`/tracks/${id}`, trackData)
     return response.data
   },
@@ -226,13 +270,31 @@ export const coursesApi = {
   },
 
   // Create course
-  create: async (courseData: any) => {
+  create: async (courseData: {
+    title: string
+    description: string
+    image: string
+    price: number
+    instructor: string
+    duration: string
+    track: string
+  }) => {
     const response = await api.post("/courses", courseData)
     return response.data
   },
 
   // Update course
-  update: async (id: string, courseData: any) => {
+  update: async (
+    id: string,
+    courseData: {
+      title?: string
+      description?: string
+      image?: string
+      price?: number
+      instructor?: string
+      duration?: string
+    }
+  ) => {
     const response = await api.put(`/courses/${id}`, courseData)
     return response.data
   },
@@ -259,7 +321,12 @@ export const registrationsApi = {
   },
 
   // Register for a course
-  register: async (registrationData: any) => {
+  register: async (registrationData: {
+    user: string
+    course: string
+    status: string
+    enrolledAt: string
+  }) => {
     const response = await api.post("/registrations", registrationData)
     return response.data
   },
@@ -280,7 +347,12 @@ export const enrollmentsApi = {
   },
 
   // Enroll in a track
-  enroll: async (enrollmentData: any) => {
+  enroll: async (enrollmentData: {
+    user: string
+    track: string
+    status: string
+    enrolledAt: string
+  }) => {
     const response = await api.post("/enrollments", enrollmentData)
     return response.data
   },

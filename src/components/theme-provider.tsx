@@ -30,18 +30,28 @@ export function ThemeProvider({
   children,
   defaultTheme = "system",
   storageKey = "theme",
-  attribute = "data-theme",
   enableSystem = true,
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(defaultTheme)
+  const [theme, setTheme] = useState<Theme>(() => {
+    const savedTheme = localStorage.getItem(storageKey) as Theme | null
+
+    if (savedTheme && ["light", "dark", "system"].includes(savedTheme)) {
+      return savedTheme
+    } else if (enableSystem) {
+      return "system"
+    }
+    return defaultTheme
+  })
 
   useEffect(() => {
     const root = window.document.documentElement
     root.classList.remove("light", "dark")
 
     if (theme === "system" && enableSystem) {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
       root.classList.add(systemTheme)
       return
     }
@@ -56,16 +66,6 @@ export function ThemeProvider({
       setTheme(theme)
     },
   }
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem(storageKey) as Theme | null
-
-    if (savedTheme && ["light", "dark", "system"].includes(savedTheme)) {
-      setTheme(savedTheme)
-    } else if (enableSystem) {
-      setTheme("system")
-    }
-  }, [enableSystem, storageKey])
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>

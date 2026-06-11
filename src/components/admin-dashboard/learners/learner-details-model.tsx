@@ -1,6 +1,7 @@
 "use client"
 
 import { FaTimes } from "react-icons/fa"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 
 type LearnerDetailsModalProps = {
@@ -23,21 +24,23 @@ export function LearnerDetailsModal({ isOpen, onClose, learner }: LearnerDetails
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-[#1d1b20] w-full max-w-2xl rounded-lg overflow-hidden">
-        <div className="bg-[#01589a] p-4 flex justify-end">
+    <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+      <div className="w-full max-w-2xl overflow-hidden rounded-lg bg-white dark:bg-[#1d1b20]">
+        <div className="flex justify-end bg-[#01589a] p-4">
           <Button variant="ghost" size="icon" onClick={onClose} className="text-white">
             <FaTimes />
           </Button>
         </div>
 
         <div className="p-6">
-          <div className="flex flex-col items-center mb-6">
-            <div className="w-32 h-32 rounded-full overflow-hidden mb-4">
-              <img
+          <div className="mb-6 flex flex-col items-center">
+            <div className="mb-4 h-32 w-32 overflow-hidden rounded-full">
+              <Image
                 src={learner.avatar || "/placeholder.svg?height=128&width=128&query=person"}
                 alt={learner.name}
-                className="w-full h-full object-cover"
+                width={128}
+                height={128}
+                className="h-full w-full object-cover"
               />
             </div>
             <h2 className="text-2xl font-bold">{learner.name}</h2>

@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react"
 import { CourseGrid } from "@/components/Courses/course-grid"
 import { fetchCourses } from "@/lib/repositories/courses"
-import { FiAlertCircle, FiArrowRight } from "react-icons/fi"
-import Link from "next/link"
+import { FiAlertCircle } from "react-icons/fi"
 import { SearchBar } from "@/components/Courses/search-bar"
 import type { Course } from "@/lib/types/course"
 
@@ -59,47 +58,46 @@ export default function CoursesPage() {
     setFilteredCourses(filtered)
   }
 
-  console.log("Filtered courses:", filteredCourses);
-  
+  console.log("Filtered courses:", filteredCourses)
 
   return (
-    <div className="flex flex-col min-h-screen">
-
+    <div className="flex min-h-screen flex-col">
       {/* Hero Section */}
-      <div className="w-full py-12 text-center text-white bg-[#01589a]">
+      <div className="w-full bg-[#01589a] py-12 text-center text-white">
         <h1 className="text-3xl font-bold">Courses</h1>
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 px-4 py-8 md:px-8 max-w-7xl mx-auto w-full">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 md:px-8">
         {/* Search Bar */}
         <SearchBar onSearch={handleSearch} initialQuery={searchQuery} />
 
         {/* All Courses */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="mb-8 flex items-center justify-between">
           <h2 className="text-2xl font-bold">All Courses</h2>
           {searchQuery && (
             <p className="text-sm text-gray-500">
-              {filteredCourses.length} {filteredCourses.length === 1 ? "result" : "results"} for "{searchQuery}"
+              {filteredCourses.length} {filteredCourses.length === 1 ? "result" : "results"} for
+              &quot;{searchQuery}&quot;
             </p>
           )}
         </div>
 
         {isLoading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#01589a]"></div>
+          <div className="flex items-center justify-center py-20">
+            <div className="h-12 w-12 animate-spin rounded-full border-t-2 border-b-2 border-[#01589a]"></div>
           </div>
         ) : error ? (
-          <div className="p-4 mb-4 text-red-700 bg-red-100 rounded-md">
+          <div className="mb-4 rounded-md bg-red-100 p-4 text-red-700">
             <div className="flex items-center">
-              <FiAlertCircle className="w-5 h-5 mr-2" />
+              <FiAlertCircle className="mr-2 h-5 w-5" />
               <p>Error loading courses: {error}</p>
             </div>
           </div>
         ) : filteredCourses.length === 0 ? (
-          <div className="p-8 mb-4 text-center border rounded-md">
-            <FiAlertCircle className="w-8 h-8 mx-auto mb-4 text-gray-400" />
-            <h3 className="text-xl font-medium mb-2">No courses found</h3>
+          <div className="mb-4 rounded-md border p-8 text-center">
+            <FiAlertCircle className="mx-auto mb-4 h-8 w-8 text-gray-400" />
+            <h3 className="mb-2 text-xl font-medium">No courses found</h3>
             <p className="text-gray-500">
               {searchQuery
                 ? `No courses match "${searchQuery}". Try a different search term.`

@@ -1,8 +1,7 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { InputWithIcon } from "@/components/shared/Input"
-import Image from "next/image"
 import { useForm } from "react-hook-form"
 import { BsArrowRight } from "react-icons/bs"
 import { RiMailLine } from "react-icons/ri"
@@ -12,14 +11,10 @@ import { toast } from "react-toastify"
 export default function ForgotPassword() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [id, setId] = useState("")
-
-  useEffect(() => {
-    const storedId = localStorage.getItem("id")
-    if (storedId) {
-      setId(storedId)
-    }
-  }, [])
+  const [id] = useState(() => {
+    if (typeof window === "undefined") return ""
+    return localStorage.getItem("id") || ""
+  })
 
   const {
     register,
@@ -38,22 +33,25 @@ export default function ForgotPassword() {
       await forgotPassword(data.email)
       toast.success(`We've sent a password reset link to ${data.email}`)
       router.push(`/forgot-password/reset-password?${id}`)
-    } catch (error: any) {
+    } catch (error) {
       console.error("Password reset request failed:", error)
-      toast.error(error.message || "Failed to send reset link. Please try again.")
+      if (error instanceof Error) {
+        toast.error(error.message || "Failed to send reset link. Please try again.")
+      } else {
+        toast.error("Failed to send reset link. Please try again.")
+      }
     } finally {
       setIsSubmitting(false)
     }
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <main className="flex-1 container mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-center gap-8">
-       
+    <div className="flex min-h-screen flex-col">
+      <main className="container mx-auto flex flex-1 flex-col items-center justify-center gap-8 px-4 py-12 md:flex-row">
         <div className="w-full max-w-md">
-          <h1 className="text-3xl font-bold text-[#404040] mb-4">Forgot Password</h1>
-          <p className="text-[#666666] mb-6">
-            Enter your email address and we'll send you a link to reset your password
+          <h1 className="mb-4 text-3xl font-bold text-[#404040]">Forgot Password</h1>
+          <p className="mb-6 text-[#666666]">
+            Enter your email address and we&apos;ll send you a link to reset your password
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -62,7 +60,7 @@ export default function ForgotPassword() {
                 name="email"
                 type="email"
                 placeholder="Enter your email"
-                icon={<RiMailLine className="w-5 h-5" />}
+                icon={<RiMailLine className="h-5 w-5" />}
                 register={register}
                 required={true}
                 error={!!errors.email}
@@ -72,7 +70,7 @@ export default function ForgotPassword() {
             </div>
             <button
               type="submit"
-              className="w-full flex items-center justify-center bg-[#01589a] text-white py-3 px-4 rounded hover:bg-[#115ea5]"
+              className="flex w-full items-center justify-center rounded bg-[#01589a] px-4 py-3 text-white hover:bg-[#115ea5]"
               disabled={!isValid || isSubmitting}
             >
               {isSubmitting ? "Sending..." : "Send Reset Link"}{" "}
@@ -83,7 +81,10 @@ export default function ForgotPassword() {
           <div className="mt-8 text-center">
             <p className="text-[#666666]">
               Remember your password?{" "}
-              <button onClick={() => router.push("/login")} className="text-[#01589a] font-medium hover:underline">
+              <button
+                onClick={() => router.push("/login")}
+                className="font-medium text-[#01589a] hover:underline"
+              >
                 Back to login
               </button>
             </p>

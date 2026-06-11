@@ -1,10 +1,9 @@
-import HomePage from "@/components/LearnerPage/HomePage";
-import Image from "next/image";
+import HomePage from "@/components/LearnerPage/HomePage"
 
 export default function Home() {
   return (
-    <div className="flex items-center justify-items-center min-h-screen w-full ">
-     <HomePage />
+    <div className="flex min-h-screen w-full items-center justify-items-center">
+      <HomePage />
     </div>
-  );
+  )
 }

@@ -21,7 +21,6 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<FormData>()
 
@@ -43,7 +42,7 @@ export default function LoginPage() {
       }
 
       // Store token and user data
-      localStorage.setItem("token", "google-auth-token") // You might want to store a real token if available
+      localStorage.setItem("token", session.user.accessToken || "google-auth-token")
       localStorage.setItem("user", JSON.stringify(userData))
 
       // Notify other components about auth state change
@@ -68,7 +67,7 @@ export default function LoginPage() {
           firstname: result.user.firstName,
           lastname: result.user.lastName,
           email: result.user.email,
-        }),
+        })
       )
 
       // Notify other components about auth state change
@@ -86,14 +85,15 @@ export default function LoginPage() {
     }
   }
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = () => {
     setLoading(true)
-    await signIn("google", { callbackUrl: "/" })
+    setLoginError("")
+    signIn("google", { callbackUrl: "/" })
   }
 
   return (
-    <div className="flex flex-col items-center w-full p-4 md:p-8 lg:p-12 max-w-lg gap-8 ">
-      <h1 className="md:text-3xl text-lg font-medium text-[#404040] text-center">
+    <div className="flex w-full max-w-lg flex-col items-center gap-8 p-4 md:p-8 lg:p-12">
+      <h1 className="text-center text-lg font-medium text-[#404040] md:text-3xl">
         Log in to continue your
         <br />
         learning journey
@@ -105,7 +105,7 @@ export default function LoginPage() {
           type="button"
           onClick={handleGoogleSignIn}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 border border-[#e6e6e6] rounded p-3 mb-4 hover:bg-[#f5f5f5] disabled:opacity-70 disabled:cursor-not-allowed"
+          className="mb-4 flex w-full items-center justify-center gap-2 rounded border border-[#e6e6e6] p-3 hover:bg-[#f5f5f5] disabled:cursor-not-allowed disabled:opacity-70"
         >
           <Image
             src={google_logo || "/placeholder.svg?height=24&width=24&query=google logo"}
@@ -116,10 +116,10 @@ export default function LoginPage() {
           Log in using Google
         </button>
 
-        <div className="flex items-center gap-4 my-4">
-          <div className="h-px bg-[#e6e6e6] flex-1" />
+        <div className="my-4 flex items-center gap-4">
+          <div className="h-px flex-1 bg-[#e6e6e6]" />
           <span className="text-[#666666]">or</span>
-          <div className="h-px bg-[#e6e6e6] flex-1" />
+          <div className="h-px flex-1 bg-[#e6e6e6]" />
         </div>
 
         {/* Login Form */}
@@ -138,7 +138,7 @@ export default function LoginPage() {
               },
             })}
             error={!!errors.email}
-            valid={!errors.email && !!watch("email")}
+            valid={!errors.email}
             errorMessage={errors.email?.message}
           />
 
@@ -152,7 +152,7 @@ export default function LoginPage() {
               required: "Password is required",
             }}
             error={!!errors.password}
-            valid={!errors.password && !!watch("password")}
+            valid={!errors.password}
             errorMessage={errors.password?.message}
           />
 
@@ -162,22 +162,31 @@ export default function LoginPage() {
             </Link>
           </div>
 
-          {loginError && <div className="p-3 bg-[#F7E9EA] text-[#A61D24] rounded text-sm">{loginError}</div>}
+          {loginError && (
+            <div className="rounded bg-[#F7E9EA] p-3 text-sm text-[#A61D24]">{loginError}</div>
+          )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 bg-[#01589a] text-white rounded p-3 hover:bg-[#115ea5] disabled:opacity-70 disabled:cursor-not-allowed"
+            className="flex w-full items-center justify-center gap-2 rounded bg-[#01589a] p-3 text-white hover:bg-[#115ea5] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {loading ? (
               <div className="flex items-center justify-center">
                 <svg
-                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  className="mr-2 -ml-1 h-4 w-4 animate-spin text-white"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
                   <path
                     className="opacity-75"
                     fill="currentColor"
@@ -194,10 +203,10 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="text-center mt-6">
+        <div className="mt-6 text-center">
           <p className="text-[#404040]">
             Need to create an account?{" "}
-            <Link href="/admin/register" className="text-[#01589a] hover:underline">
+            <Link href="/signup" className="text-[#01589a] hover:underline">
               Signup
             </Link>
           </p>

@@ -34,14 +34,14 @@ export function StatsCards({ stats }: StatsProps) {
   ]
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       {statsItems.map((stat, index) => (
-        <div key={index} className="bg-[#f5f5f5] dark:bg-[#1d1b20] rounded-lg overflow-hidden">
-          <div className="p-4 bg-white dark:bg-[#404040] border-b border-[#e6e6e6] dark:border-[#666666] flex items-center gap-2">
+        <div key={index} className="overflow-hidden rounded-lg bg-[#f5f5f5] dark:bg-[#1d1b20]">
+          <div className="flex items-center gap-2 border-b border-[#e6e6e6] bg-white p-4 dark:border-[#666666] dark:bg-[#404040]">
             {stat.icon}
             <h3 className="font-medium">{stat.title}</h3>
           </div>
-          <div className="p-6 flex justify-center items-center">
+          <div className="flex items-center justify-center p-6">
             <span className="text-2xl font-bold">{stat.value}</span>
           </div>
         </div>

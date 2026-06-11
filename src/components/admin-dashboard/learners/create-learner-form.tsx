@@ -19,7 +19,13 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 
 export function CreateLearnerForm() {
@@ -49,17 +55,17 @@ export function CreateLearnerForm() {
 
   return (
     <div className="p-6">
-      <div className="flex items-center gap-2 mb-6">
+      <div className="mb-6 flex items-center gap-2">
         <h1 className="text-gray-500">Learners</h1>
         <span>/</span>
         <h1 className="text-2xl font-bold">Create Learners</h1>
       </div>
 
-      <div className="bg-[#f9f9f9] dark:bg-[#1d1b20] p-6 rounded-lg">
+      <div className="rounded-lg bg-[#f9f9f9] p-6 dark:bg-[#1d1b20]">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="relative">
-              <div className="absolute left-3 top-1/2 text-gray-400">
+              <div className="absolute top-1/2 left-3 text-gray-400">
                 <FaUser />
               </div>
               <Label htmlFor="firstName">First name</Label>
@@ -72,7 +78,7 @@ export function CreateLearnerForm() {
             </div>
 
             <div className="relative">
-              <div className="absolute left-3 top-1/2 text-gray-400">
+              <div className="absolute top-1/2 left-3 text-gray-400">
                 <FaUser />
               </div>
               <Label htmlFor="lastName">Last name</Label>
@@ -86,7 +92,7 @@ export function CreateLearnerForm() {
           </div>
 
           <div className="relative">
-            <div className="absolute left-3 top-1/2 text-gray-400">
+            <div className="absolute top-1/2 left-3 text-gray-400">
               <FaEnvelope />
             </div>
             <Label htmlFor="email">Email</Label>
@@ -99,13 +105,16 @@ export function CreateLearnerForm() {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="relative">
-              <div className="absolute left-3 top-1/2 text-gray-400">
+              <div className="absolute top-1/2 left-3 text-gray-400">
                 <FaGraduationCap />
               </div>
               <Label htmlFor="program">Select program</Label>
-              <Select value={formData.program} onValueChange={(value) => handleChange("program", value)}>
+              <Select
+                value={formData.program}
+                onValueChange={(value) => handleChange("program", value)}
+              >
                 <SelectTrigger className="pl-10">
                   <SelectValue placeholder="Select program" />
                 </SelectTrigger>
@@ -118,11 +127,14 @@ export function CreateLearnerForm() {
             </div>
 
             <div className="relative">
-              <div className="absolute left-3 top-1/2 text-gray-400">
+              <div className="absolute top-1/2 left-3 text-gray-400">
                 <FaVenusMars />
               </div>
               <Label htmlFor="gender">Gender</Label>
-              <Select value={formData.gender} onValueChange={(value) => handleChange("gender", value)}>
+              <Select
+                value={formData.gender}
+                onValueChange={(value) => handleChange("gender", value)}
+              >
                 <SelectTrigger className="pl-10">
                   <SelectValue placeholder="Gender" />
                 </SelectTrigger>
@@ -135,9 +147,9 @@ export function CreateLearnerForm() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="relative">
-              <div className="absolute left-3 top-1/2 text-gray-400">
+              <div className="absolute top-1/2 left-3 text-gray-400">
                 <FaMapMarkerAlt />
               </div>
               <Label htmlFor="location">Location</Label>
@@ -150,7 +162,7 @@ export function CreateLearnerForm() {
             </div>
 
             <div className="relative">
-              <div className="absolute left-3 top-1/2 text-gray-400">
+              <div className="absolute top-1/2 left-3 text-gray-400">
                 <FaPhone />
               </div>
               <Label htmlFor="phone">Phone</Label>
@@ -164,11 +176,14 @@ export function CreateLearnerForm() {
           </div>
 
           <div className="relative">
-            <div className="absolute left-3 top-1/2 text-gray-400">
+            <div className="absolute top-1/2 left-3 text-gray-400">
               <FaUserSlash />
             </div>
             <Label htmlFor="disabled">Disabled</Label>
-            <Select value={formData.disabled} onValueChange={(value) => handleChange("disabled", value)}>
+            <Select
+              value={formData.disabled}
+              onValueChange={(value) => handleChange("disabled", value)}
+            >
               <SelectTrigger className="pl-10">
                 <SelectValue placeholder="Disabled" />
               </SelectTrigger>
@@ -180,7 +195,7 @@ export function CreateLearnerForm() {
           </div>
 
           <div className="relative">
-            <div className="absolute left-3 top-1/2 text-gray-400">
+            <div className="absolute top-1/2 left-3 text-gray-400">
               <FaDollarSign />
             </div>
             <Label htmlFor="amount">Amount</Label>
@@ -199,13 +214,13 @@ export function CreateLearnerForm() {
           </div>
 
           <div className="relative">
-            <div className="absolute left-3 top-1/2 text-gray-400">
+            <div className="absolute top-1/2 left-3 text-gray-400">
               <FaPen />
             </div>
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              className="pl-10 min-h-[100px]"
+              className="min-h-[100px] pl-10"
               value={formData.description}
               onChange={(e) => handleChange("description", e.target.value)}
             />
